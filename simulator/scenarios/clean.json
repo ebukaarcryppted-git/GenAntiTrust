@@ -4,37 +4,37 @@
   "agents": [
     {
       "name": "agent-alpha",
-      "wallet": "0x1000000000000000000000000000000000000a1",
+      "wallet": "0x48c6582c93c9751e6499887dd22fbd1dfbfdd4d5",
       "base_price": 20.0,
       "is_colluder": true
     },
     {
       "name": "agent-bravo",
-      "wallet": "0x1000000000000000000000000000000000000b2",
+      "wallet": "0x5d9c5248b5a810e2139982248c442c678ad8de41",
       "base_price": 20.4,
       "is_colluder": true
     },
     {
       "name": "agent-charlie",
-      "wallet": "0x1000000000000000000000000000000000000c3",
+      "wallet": "0x41424d03dd2c2a6fc0b62e3133675d307754f014",
       "base_price": 19.7,
       "is_colluder": false
     },
     {
       "name": "agent-delta",
-      "wallet": "0x1000000000000000000000000000000000000d4",
+      "wallet": "0x53c4f5d0d842b4c3e4f8086ba868c15941c3e408",
       "base_price": 20.1,
       "is_colluder": false
     }
   ],
-  "respondent_wallet": "0x1000000000000000000000000000000000000a1",
+  "respondent_wallet": "0x48c6582c93c9751e6499887dd22fbd1dfbfdd4d5",
   "respondent_name": "agent-alpha",
   "summary": "4 independent pricing agents on sku-widget-9000 over 10 days. Prices loosely track the public average with idiosyncratic noise; no private coordination of any kind.",
   "evidence": [
     {
       "t": "2026-08-01T02:01:47Z",
       "agent": "agent-bravo",
-      "wallet": "0x1000000000000000000000000000000000000b2",
+      "wallet": "0x5d9c5248b5a810e2139982248c442c678ad8de41",
       "type": "price_update",
       "sku": "sku-widget-9000",
       "price": 20.26,
@@ -43,7 +43,7 @@
     {
       "t": "2026-08-01T02:03:05Z",
       "agent": "agent-alpha",
-      "wallet": "0x1000000000000000000000000000000000000a1",
+      "wallet": "0x48c6582c93c9751e6499887dd22fbd1dfbfdd4d5",
       "type": "price_update",
       "sku": "sku-widget-9000",
       "price": 20.11,
@@ -52,7 +52,7 @@
     {
       "t": "2026-08-01T02:34:47Z",
       "agent": "agent-delta",
-      "wallet": "0x1000000000000000000000000000000000000d4",
+      "wallet": "0x53c4f5d0d842b4c3e4f8086ba868c15941c3e408",
       "type": "price_update",
       "sku": "sku-widget-9000",
       "price": 19.81,
@@ -61,7 +61,7 @@
     {
       "t": "2026-08-01T02:35:36Z",
       "agent": "agent-charlie",
-      "wallet": "0x1000000000000000000000000000000000000c3",
+      "wallet": "0x41424d03dd2c2a6fc0b62e3133675d307754f014",
       "type": "price_update",
       "sku": "sku-widget-9000",
       "price": 19.42,
@@ -70,7 +70,7 @@
     {
       "t": "2026-08-02T05:08:16Z",
       "agent": "agent-delta",
-      "wallet": "0x1000000000000000000000000000000000000d4",
+      "wallet": "0x53c4f5d0d842b4c3e4f8086ba868c15941c3e408",
       "type": "price_update",
       "sku": "sku-widget-9000",
       "price": 19.57,
@@ -79,7 +79,7 @@
     {
       "t": "2026-08-02T05:33:22Z",
       "agent": "agent-bravo",
-      "wallet": "0x1000000000000000000000000000000000000b2",
+      "wallet": "0x5d9c5248b5a810e2139982248c442c678ad8de41",
       "type": "price_update",
       "sku": "sku-widget-9000",
       "price": 20.24,
@@ -88,7 +88,7 @@
     {
       "t": "2026-08-02T05:54:08Z",
       "agent": "agent-alpha",
-      "wallet": "0x1000000000000000000000000000000000000a1",
+      "wallet": "0x48c6582c93c9751e6499887dd22fbd1dfbfdd4d5",
       "type": "price_update",
       "sku": "sku-widget-9000",
       "price": 19.9,
@@ -97,7 +97,7 @@
     {
       "t": "2026-08-02T06:14:55Z",
       "agent": "agent-charlie",
-      "wallet": "0x1000000000000000000000000000000000000c3",
+      "wallet": "0x41424d03dd2c2a6fc0b62e3133675d307754f014",
       "type": "price_update",
       "sku": "sku-widget-9000",
       "price": 19.2,
@@ -106,7 +106,7 @@
     {
       "t": "2026-08-03T02:09:35Z",
       "agent": "agent-charlie",
-      "wallet": "0x1000000000000000000000000000000000000c3",
+      "wallet": "0x41424d03dd2c2a6fc0b62e3133675d307754f014",
       "type": "price_update",
       "sku": "sku-widget-9000",
       "price": 18.92,
@@ -115,7 +115,7 @@
     {
       "t": "2026-08-03T02:19:19Z",
       "agent": "agent-delta",
-      "wallet": "0x1000000000000000000000000000000000000d4",
+      "wallet": "0x53c4f5d0d842b4c3e4f8086ba868c15941c3e408",
       "type": "price_update",
       "sku": "sku-widget-9000",
       "price": 19.54,
@@ -124,7 +124,7 @@
     {
       "t": "2026-08-03T02:40:21Z",
       "agent": "agent-bravo",
-      "wallet": "0x1000000000000000000000000000000000000b2",
+      "wallet": "0x5d9c5248b5a810e2139982248c442c678ad8de41",
       "type": "price_update",
       "sku": "sku-widget-9000",
       "price": 20.08,
@@ -133,7 +133,7 @@
     {
       "t": "2026-08-03T02:43:23Z",
       "agent": "agent-alpha",
-      "wallet": "0x1000000000000000000000000000000000000a1",
+      "wallet": "0x48c6582c93c9751e6499887dd22fbd1dfbfdd4d5",
       "type": "price_update",
       "sku": "sku-widget-9000",
       "price": 19.65,
@@ -142,7 +142,7 @@
     {
       "t": "2026-08-04T03:41:25Z",
       "agent": "agent-delta",
-      "wallet": "0x1000000000000000000000000000000000000d4",
+      "wallet": "0x53c4f5d0d842b4c3e4f8086ba868c15941c3e408",
       "type": "price_update",
       "sku": "sku-widget-9000",
       "price": 19.88,
@@ -151,7 +151,7 @@
     {
       "t": "2026-08-04T04:22:30Z",
       "agent": "agent-bravo",
-      "wallet": "0x1000000000000000000000000000000000000b2",
+      "wallet": "0x5d9c5248b5a810e2139982248c442c678ad8de41",
       "type": "price_update",
       "sku": "sku-widget-9000",
       "price": 19.82,
@@ -160,7 +160,7 @@
     {
       "t": "2026-08-04T04:36:27Z",
       "agent": "agent-charlie",
-      "wallet": "0x1000000000000000000000000000000000000c3",
+      "wallet": "0x41424d03dd2c2a6fc0b62e3133675d307754f014",
       "type": "price_update",
       "sku": "sku-widget-9000",
       "price": 19.26,
@@ -169,7 +169,7 @@
     {
       "t": "2026-08-04T04:42:17Z",
       "agent": "agent-alpha",
-      "wallet": "0x1000000000000000000000000000000000000a1",
+      "wallet": "0x48c6582c93c9751e6499887dd22fbd1dfbfdd4d5",
       "type": "price_update",
       "sku": "sku-widget-9000",
       "price": 19.5,
@@ -178,7 +178,7 @@
     {
       "t": "2026-08-05T02:58:45Z",
       "agent": "agent-charlie",
-      "wallet": "0x1000000000000000000000000000000000000c3",
+      "wallet": "0x41424d03dd2c2a6fc0b62e3133675d307754f014",
       "type": "price_update",
       "sku": "sku-widget-9000",
       "price": 19.57,
@@ -187,7 +187,7 @@
     {
       "t": "2026-08-05T03:14:31Z",
       "agent": "agent-alpha",
-      "wallet": "0x1000000000000000000000000000000000000a1",
+      "wallet": "0x48c6582c93c9751e6499887dd22fbd1dfbfdd4d5",
       "type": "price_update",
       "sku": "sku-widget-9000",
       "price": 19.28,
@@ -196,7 +196,7 @@
     {
       "t": "2026-08-05T03:22:42Z",
       "agent": "agent-delta",
-      "wallet": "0x1000000000000000000000000000000000000d4",
+      "wallet": "0x53c4f5d0d842b4c3e4f8086ba868c15941c3e408",
       "type": "price_update",
       "sku": "sku-widget-9000",
       "price": 19.91,
@@ -205,7 +205,7 @@
     {
       "t": "2026-08-05T03:39:20Z",
       "agent": "agent-bravo",
-      "wallet": "0x1000000000000000000000000000000000000b2",
+      "wallet": "0x5d9c5248b5a810e2139982248c442c678ad8de41",
       "type": "price_update",
       "sku": "sku-widget-9000",
       "price": 19.93,
@@ -214,7 +214,7 @@
     {
       "t": "2026-08-06T03:26:54Z",
       "agent": "agent-alpha",
-      "wallet": "0x1000000000000000000000000000000000000a1",
+      "wallet": "0x48c6582c93c9751e6499887dd22fbd1dfbfdd4d5",
       "type": "price_update",
       "sku": "sku-widget-9000",
       "price": 19.66,
@@ -223,7 +223,7 @@
     {
       "t": "2026-08-06T03:44:24Z",
       "agent": "agent-delta",
-      "wallet": "0x1000000000000000000000000000000000000d4",
+      "wallet": "0x53c4f5d0d842b4c3e4f8086ba868c15941c3e408",
       "type": "price_update",
       "sku": "sku-widget-9000",
       "price": 19.81,
@@ -232,7 +232,7 @@
     {
       "t": "2026-08-06T03:47:22Z",
       "agent": "agent-bravo",
-      "wallet": "0x1000000000000000000000000000000000000b2",
+      "wallet": "0x5d9c5248b5a810e2139982248c442c678ad8de41",
       "type": "price_update",
       "sku": "sku-widget-9000",
       "price": 19.58,
@@ -241,7 +241,7 @@
     {
       "t": "2026-08-06T03:58:12Z",
       "agent": "agent-charlie",
-      "wallet": "0x1000000000000000000000000000000000000c3",
+      "wallet": "0x41424d03dd2c2a6fc0b62e3133675d307754f014",
       "type": "price_update",
       "sku": "sku-widget-9000",
       "price": 19.93,
@@ -250,7 +250,7 @@
     {
       "t": "2026-08-07T00:18:39Z",
       "agent": "agent-alpha",
-      "wallet": "0x1000000000000000000000000000000000000a1",
+      "wallet": "0x48c6582c93c9751e6499887dd22fbd1dfbfdd4d5",
       "type": "price_update",
       "sku": "sku-widget-9000",
       "price": 19.44,
@@ -259,7 +259,7 @@
     {
       "t": "2026-08-07T00:19:45Z",
       "agent": "agent-bravo",
-      "wallet": "0x1000000000000000000000000000000000000b2",
+      "wallet": "0x5d9c5248b5a810e2139982248c442c678ad8de41",
       "type": "price_update",
       "sku": "sku-widget-9000",
       "price": 19.78,
@@ -268,7 +268,7 @@
     {
       "t": "2026-08-07T00:57:34Z",
       "agent": "agent-delta",
-      "wallet": "0x1000000000000000000000000000000000000d4",
+      "wallet": "0x53c4f5d0d842b4c3e4f8086ba868c15941c3e408",
       "type": "price_update",
       "sku": "sku-widget-9000",
       "price": 19.77,
@@ -277,7 +277,7 @@
     {
       "t": "2026-08-07T01:26:33Z",
       "agent": "agent-charlie",
-      "wallet": "0x1000000000000000000000000000000000000c3",
+      "wallet": "0x41424d03dd2c2a6fc0b62e3133675d307754f014",
       "type": "price_update",
       "sku": "sku-widget-9000",
       "price": 19.84,
@@ -286,7 +286,7 @@
     {
       "t": "2026-08-08T05:33:52Z",
       "agent": "agent-charlie",
-      "wallet": "0x1000000000000000000000000000000000000c3",
+      "wallet": "0x41424d03dd2c2a6fc0b62e3133675d307754f014",
       "type": "price_update",
       "sku": "sku-widget-9000",
       "price": 19.57,
@@ -295,7 +295,7 @@
     {
       "t": "2026-08-08T05:43:04Z",
       "agent": "agent-alpha",
-      "wallet": "0x1000000000000000000000000000000000000a1",
+      "wallet": "0x48c6582c93c9751e6499887dd22fbd1dfbfdd4d5",
       "type": "price_update",
       "sku": "sku-widget-9000",
       "price": 19.74,
@@ -304,7 +304,7 @@
     {
       "t": "2026-08-08T06:01:39Z",
       "agent": "agent-delta",
-      "wallet": "0x1000000000000000000000000000000000000d4",
+      "wallet": "0x53c4f5d0d842b4c3e4f8086ba868c15941c3e408",
       "type": "price_update",
       "sku": "sku-widget-9000",
       "price": 19.58,
@@ -313,7 +313,7 @@
     {
       "t": "2026-08-08T06:37:35Z",
       "agent": "agent-bravo",
-      "wallet": "0x1000000000000000000000000000000000000b2",
+      "wallet": "0x5d9c5248b5a810e2139982248c442c678ad8de41",
       "type": "price_update",
       "sku": "sku-widget-9000",
       "price": 19.67,
@@ -322,7 +322,7 @@
     {
       "t": "2026-08-09T04:09:47Z",
       "agent": "agent-alpha",
-      "wallet": "0x1000000000000000000000000000000000000a1",
+      "wallet": "0x48c6582c93c9751e6499887dd22fbd1dfbfdd4d5",
       "type": "price_update",
       "sku": "sku-widget-9000",
       "price": 19.38,
@@ -331,7 +331,7 @@
     {
       "t": "2026-08-09T04:27:40Z",
       "agent": "agent-charlie",
-      "wallet": "0x1000000000000000000000000000000000000c3",
+      "wallet": "0x41424d03dd2c2a6fc0b62e3133675d307754f014",
       "type": "price_update",
       "sku": "sku-widget-9000",
       "price": 19.59,
@@ -340,7 +340,7 @@
     {
       "t": "2026-08-09T04:53:02Z",
       "agent": "agent-delta",
-      "wallet": "0x1000000000000000000000000000000000000d4",
+      "wallet": "0x53c4f5d0d842b4c3e4f8086ba868c15941c3e408",
       "type": "price_update",
       "sku": "sku-widget-9000",
       "price": 19.28,
@@ -349,7 +349,7 @@
     {
       "t": "2026-08-09T04:57:51Z",
       "agent": "agent-bravo",
-      "wallet": "0x1000000000000000000000000000000000000b2",
+      "wallet": "0x5d9c5248b5a810e2139982248c442c678ad8de41",
       "type": "price_update",
       "sku": "sku-widget-9000",
       "price": 19.71,
@@ -358,7 +358,7 @@
     {
       "t": "2026-08-10T04:45:31Z",
       "agent": "agent-delta",
-      "wallet": "0x1000000000000000000000000000000000000d4",
+      "wallet": "0x53c4f5d0d842b4c3e4f8086ba868c15941c3e408",
       "type": "price_update",
       "sku": "sku-widget-9000",
       "price": 19.18,
@@ -367,7 +367,7 @@
     {
       "t": "2026-08-10T04:59:34Z",
       "agent": "agent-charlie",
-      "wallet": "0x1000000000000000000000000000000000000c3",
+      "wallet": "0x41424d03dd2c2a6fc0b62e3133675d307754f014",
       "type": "price_update",
       "sku": "sku-widget-9000",
       "price": 19.28,
@@ -376,7 +376,7 @@
     {
       "t": "2026-08-10T05:16:06Z",
       "agent": "agent-alpha",
-      "wallet": "0x1000000000000000000000000000000000000a1",
+      "wallet": "0x48c6582c93c9751e6499887dd22fbd1dfbfdd4d5",
       "type": "price_update",
       "sku": "sku-widget-9000",
       "price": 19.61,
@@ -385,7 +385,7 @@
     {
       "t": "2026-08-10T05:37:52Z",
       "agent": "agent-bravo",
-      "wallet": "0x1000000000000000000000000000000000000b2",
+      "wallet": "0x5d9c5248b5a810e2139982248c442c678ad8de41",
       "type": "price_update",
       "sku": "sku-widget-9000",
       "price": 19.41,

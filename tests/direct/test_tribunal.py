@@ -7,6 +7,7 @@ Run with:
     pytest tests/direct/ -v
 """
 
+import hashlib
 import json
 
 import pytest
@@ -14,7 +15,8 @@ import pytest
 CONTRACT_PATH = "contracts/tribunal.py"
 MIN_BOND = 1 * 10**18
 
-RESPONDENT = "0x1000000000000000000000000000000000000b2"
+# A valid-shaped (20-byte / 40-hex-char) placeholder address -- not a real account.
+RESPONDENT = "0x" + hashlib.sha256(b"agent-bravo").hexdigest()[:40]
 EVIDENCE = json.dumps(
     [
         {"t": "2026-08-01T00:00:00Z", "agent": "agent-alpha", "type": "price_update", "price": 20.0},

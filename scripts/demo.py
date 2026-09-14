@@ -14,13 +14,20 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import io
 import json
 import pathlib
 import sys
 import time
 
+# Windows consoles often default to a legacy codepage (cp1252) that can't
+# encode the emoji used below; force UTF-8 so this runs the same everywhere.
+if sys.stdout.encoding and sys.stdout.encoding.lower() != "utf-8":
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
+    sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding="utf-8", errors="replace")
+
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
-from gl_client import get_client, get_contract_address  # noqa: E402
+from gl_client import get_client, get_contract_address, read_contract_patched  # noqa: E402
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 
@@ -32,21 +39,67 @@ def banner(text: str) -> None:
 
 
 def read(client, address, fn, args=None):
-    return client.read_contract(address=address, function_name=fn, args=args or [])
+    return read_contract_patched(client, address, fn, args or [])
+
+
+def _execution_succeeded(receipt: dict) -> bool:
+    # genlayer_py's simplified receipt exposes this at the top level as
+    # `tx_execution_result_name` (e.g. "FINISHED_WITH_RETURN" / "FINISHED_WITH_ERROR"),
+    # not nested under consensus_data.leader_receipt (that field comes back
+    # empty from this client). That alone only says the *leader's* execution
+    # produced a return value -- the round can still fail to reach a
+    # majority (status "UNDETERMINED", NO_MAJORITY), which is a genuine
+    # "validators disagreed" outcome, not a code bug, but also not a
+    # committed state change. Require both.
+    return (
+        receipt.get("tx_execution_result_name") == "FINISHED_WITH_RETURN"
+        and receipt.get("status_name") in ("ACCEPTED", "FINALIZED")
+    )
 
 
 def write(client, address, fn, args=None, value=0, label=""):
     print(f"  -> submitting {fn}({', '.join(str(a)[:60] for a in (args or []))}) ...")
-    tx_hash = client.write_contract(
-        address=address, function_name=fn, args=args or [], value=value
-    )
+
+    # Submission itself occasionally reverts at the raw EVM/consensus-contract
+    # layer on a nonce race with a just-mined prior tx; retry the submission,
+    # not just the receipt wait, before giving up.
+    tx_hash = None
+    for attempt in range(3):
+        try:
+            tx_hash = client.write_contract(
+                address=address, function_name=fn, args=args or [], value=value
+            )
+            break
+        except Exception as e:
+            if attempt == 2:
+                raise
+            print(f"     (transient error submitting transaction, retrying: {e})")
+            time.sleep(5)
     print(f"     tx: {tx_hash}")
-    print("     waiting for validator consensus ...")
-    receipt = client.wait_for_transaction_receipt(
-        transaction_hash=tx_hash, retries=300, interval=2000
-    )
+    print("     waiting for validator consensus (LLM calls can take 1-3 minutes) ...")
+
+    # Bradbury's RPC occasionally resets long-polling connections; retry the
+    # wait itself a couple of times rather than treating that as fatal.
+    receipt = None
+    for attempt in range(3):
+        try:
+            receipt = client.wait_for_transaction_receipt(
+                transaction_hash=tx_hash, retries=150, interval=2000
+            )
+            break
+        except Exception as e:
+            if attempt == 2:
+                raise
+            print(f"     (transient error polling receipt, retrying: {e})")
+
     status = receipt.get("status_name") or receipt.get("status")
-    print(f"     status: {status}")
+    exec_result = receipt.get("tx_execution_result_name")
+    ok = _execution_succeeded(receipt)
+    print(f"     status: {status}  execution: {exec_result}")
+    if not ok:
+        print(
+            "     (use `genlayer trace <txId>` for the full stderr/traceback if this is unexpected)"
+        )
     return receipt
 
 
@@ -97,7 +150,7 @@ def main() -> None:
     print(f"\nScenario: {args.scenario} -- {scenario['summary']}")
     print(f"Filing complaint against {scenario['respondent_name']} ({scenario['respondent_wallet']}) ...")
 
-    write(
+    receipt = write(
         client,
         address,
         "file_complaint",
@@ -105,6 +158,8 @@ def main() -> None:
         value=min_bond,
         label="file_complaint",
     )
+    if not _execution_succeeded(receipt):
+        raise SystemExit("file_complaint did not succeed on-chain; aborting.")
 
     dispute_ids = read(client, address, "list_disputes")
     dispute_id = dispute_ids[-1]
@@ -112,8 +167,16 @@ def main() -> None:
 
     banner("Resolving dispute -- validators independently judge the evidence")
     t0 = time.time()
-    write(client, address, "resolve_dispute", args=[dispute_id])
+    receipt = write(client, address, "resolve_dispute", args=[dispute_id])
     print(f"(resolution took {time.time() - t0:.1f}s)")
+    if not _execution_succeeded(receipt):
+        dispute = read(client, address, "get_dispute", args=[dispute_id])
+        print_dispute(dispute)
+        raise SystemExit(
+            "resolve_dispute did not reach a verdict on-chain (often a validator "
+            "timeout on a slow LLM round -- safe to retry: "
+            f"python scripts/demo.py {args.scenario} ...)."
+        )
 
     dispute = read(client, address, "get_dispute", args=[dispute_id])
     print_dispute(dispute)
@@ -136,21 +199,25 @@ def main() -> None:
                 }
             ]
         )
-        write(
+        receipt = write(
             client,
             address,
             "appeal_verdict",
             args=[dispute_id, rebuttal],
             value=dispute["bond"],
         )
+        if not _execution_succeeded(receipt):
+            print("  (appeal_verdict did not succeed on-chain -- skipping finalize)")
         dispute = read(client, address, "get_dispute", args=[dispute_id])
         print_dispute(dispute)
 
-    if args.finalize:
+    if args.finalize and dispute["status"] == "verdict_reached":
         banner("Finalizing -- releasing escrow according to the verdict")
         write(client, address, "finalize_dispute", args=[dispute_id])
         dispute = read(client, address, "get_dispute", args=[dispute_id])
         print_dispute(dispute)
+    elif args.finalize:
+        print(f"\nSkipping finalize: dispute status is '{dispute['status']}', not 'verdict_reached'.")
 
     banner("Done")
     print(f"View on explorer: {client.chain.block_explorers['default']['url']}")

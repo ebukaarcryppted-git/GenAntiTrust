@@ -173,12 +173,21 @@ def generate_rigged_market(
     return records
 
 
+def _fake_address(seed: str) -> str:
+    """Deterministic, correctly-sized (20-byte / 40-hex-char) placeholder
+    wallet address for a simulated agent -- these are not real accounts,
+    just valid Address-shaped identifiers for the evidence feed."""
+    import hashlib
+
+    return "0x" + hashlib.sha256(seed.encode()).hexdigest()[:40]
+
+
 def default_agents() -> list[Agent]:
     return [
-        Agent("agent-alpha", "0x1000000000000000000000000000000000000a1", BASE_PRICE + 0.0, is_colluder=True),
-        Agent("agent-bravo", "0x1000000000000000000000000000000000000b2", BASE_PRICE + 0.4, is_colluder=True),
-        Agent("agent-charlie", "0x1000000000000000000000000000000000000c3", BASE_PRICE - 0.3, is_colluder=False),
-        Agent("agent-delta", "0x1000000000000000000000000000000000000d4", BASE_PRICE + 0.1, is_colluder=False),
+        Agent("agent-alpha", _fake_address("agent-alpha"), BASE_PRICE + 0.0, is_colluder=True),
+        Agent("agent-bravo", _fake_address("agent-bravo"), BASE_PRICE + 0.4, is_colluder=True),
+        Agent("agent-charlie", _fake_address("agent-charlie"), BASE_PRICE - 0.3, is_colluder=False),
+        Agent("agent-delta", _fake_address("agent-delta"), BASE_PRICE + 0.1, is_colluder=False),
     ]
 
 

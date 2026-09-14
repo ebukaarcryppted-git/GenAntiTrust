@@ -29,9 +29,18 @@ Principle, then escrows and releases a GEN bond according to that verdict.
 | **Real** | The `GenAntiTrustTribunal` Intelligent Contract ([contracts/tribunal.py](contracts/tribunal.py)), deployed and running on **GenLayer Testnet Bradbury**. Every verdict is a genuine `gl.eq_principle.prompt_non_comparative` call: the leader validator runs an LLM over the submitted evidence, and every other validator independently re-grounds and re-judges that answer against the same evidence (and any live web context) before consensus is reached. The escrow, bonds, and appeal-bond settlement are real GEN token transfers on Bradbury. |
 | **Simulated** | The *marketplace* itself -- there is no live network of real merchant-pricing agents yet. [simulator/marketplace.py](simulator/marketplace.py) generates synthetic pricing/negotiation histories (a "clean" independent-competition scenario and a "rigged" scenario where two of four agents privately coordinate a price floor) and hands them to the contract exactly as a real agent-to-agent negotiation log would be. |
 
-**Contract address (Testnet Bradbury):** `PASTE_DEPLOYED_ADDRESS_HERE`
-**Explorer:** https://explorer-bradbury.genlayer.com/address/PASTE_DEPLOYED_ADDRESS_HERE
+**Contract address (Testnet Bradbury):** [`0x70096Df3A29293C5FEA914333074467E56725b3d`](https://explorer-bradbury.genlayer.com/address/0x70096Df3A29293C5FEA914333074467E56725b3d)
 **Non-deterministic call used:** [`gl.eq_principle.prompt_non_comparative`](https://docs.genlayer.com/developers/intelligent-contracts/equivalence-principle) (see `_run_verdict` in [contracts/tribunal.py](contracts/tribunal.py))
+
+**Real verdicts already rendered on Bradbury** (check any of these on the [explorer](https://explorer-bradbury.genlayer.com/)):
+
+| Dispute | Scenario | Verdict | Confidence | Tx |
+|---|---|---|---|---|
+| `DISPUTE-000002` | rigged (colluding) | 🚨 `collusion` | 99% | [resolve](https://explorer-bradbury.genlayer.com/transactions/0xeb545378e97f79d1e1b7864d94048530328ff75c140f8c8a1c4e74e4c0f7c197) |
+| `DISPUTE-000002` (appeal) | rigged, re-judged with a rebuttal | 🚨 `collusion` confirmed | 98% | [appeal](https://explorer-bradbury.genlayer.com/transactions/0xb9b2a58ecd2f565222540663efe23483ec96b3c2cc86d2f93bcdbb0ec5b7f7d2) |
+| `DISPUTE-000003` | clean (independent competition) | ❔ `inconclusive` | 45% | [resolve](https://explorer-bradbury.genlayer.com/transactions/0x177028c52af68eb52c5178dc63069359e284e20e2590bad5f2958efcc3615d27) |
+
+The clean scenario correctly came back `inconclusive` rather than a confident `legitimate` -- there's no smoking-gun evidence either way in synthetic noise, and the Equivalence Principle's criteria explicitly requires the model to prefer "inconclusive" over guessing when evidence is thin. One resolution attempt on Bradbury also hit a genuine `NO_MAJORITY` validator split (round result `NO_MAJORITY`, no verdict recorded, dispute stayed `filed` and was safely re-resolved) -- a real instance of GenLayer's Optimistic Democracy rejecting a round rather than a scripted outcome.
 
 ## Why this qualifies as an Intelligent Contract, not a dApp with an LLM bolted on
 
@@ -72,7 +81,7 @@ pip install -r requirements.txt
 genvm-lint check contracts/tribunal.py
 ```
 
-### 3. Run the direct-mode tests (no network required)
+### 3. Run the direct-mode tests
 
 ```bash
 pytest tests/direct/ -v
@@ -82,6 +91,13 @@ These mock the LLM call (`direct_vm.mock_llm`) and exercise every code path:
 bond validation, the full collusion/legitimate/inconclusive verdict branches,
 appeal success (verdict flips, appellant refunded), appeal failure (bond
 forfeited to the other party), the `MAX_APPEALS` cap, and every view method.
+
+> **Note:** the first run downloads a GenVM runner bundle (~135MB) from
+> GitHub's release CDN into `~/.cache/gltest-direct/`. On a slow or
+> rate-limited connection this can take a long time or fail with an
+> `EOFError` on a truncated file -- delete the partial `.tar.xz` in that
+> cache directory and rerun. This step is independent of the deployed
+> contract, which is already verified live on Bradbury (see below).
 
 ### 4. Wallet setup
 
@@ -158,11 +174,25 @@ disputes; without a wallet the dashboard still works read-only.
    respondent (compensation for an unfounded complaint); `collusion` or
    `inconclusive` refunds the complainant.
 
+**On payout timing:** every payout uses GenLayer's EVM-external-message
+transfer (`_Eoa(address).emit_transfer(value=...)`, `on='finalized'` by
+default) -- the safe option, meaning the GEN actually lands in the
+recipient's wallet only once that transaction's own appeal window has
+closed and it reaches `FINALIZED` (not merely `ACCEPTED`). This is standard
+GenLayer settlement behavior, not a delay specific to this contract: you can
+watch it happen on the [explorer](https://explorer-bradbury.genlayer.com/) --
+the transaction's `messages` field shows the queued transfer immediately,
+and `triggered_transactions` populates once it activates.
+
 ## The Equivalence Principle, concretely
 
 ```python
+# `gather_input` supplies the raw material (evidence + any live-fetched
+# market context) -- it must NOT pre-compute a verdict itself. The
+# Equivalence Principle performs `task` on that input via its own LLM
+# call, and every validator independently redoes exactly that.
 result_str = gl.eq_principle.prompt_non_comparative(
-    make_verdict,   # leader: fetches optional live context, calls gl.nondet.exec_prompt
+    gather_input,
     task="Classify the supplied pricing evidence as antitrust 'collusion', "
          "'legitimate' competition, or 'inconclusive', with a confidence "
          "score and reasoning grounded in the evidence and any live market context.",

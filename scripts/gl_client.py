@@ -43,6 +43,38 @@ def get_client():
     return client, account, network
 
 
+def read_contract_patched(client, address: str, function_name: str, args=None):
+    """Bradbury's current `gen_call` RPC nests the encoded return value one
+    level deeper (`result['data']`) than genlayer_py==0.18's `read_contract`
+    expects (a bare hex string) -- it crashes with
+    `TypeError: can only concatenate str (not "dict") to str`. This
+    reimplements just the response-parsing step against both shapes so the
+    demo scripts work against the SDK version pinned in requirements.txt
+    without needing an unreleased genlayer-py."""
+    import eth_utils
+    from genlayer_py.abi import calldata
+    from genlayer_py.abi.transactions import serialize
+    from genlayer_py.contracts.utils import make_calldata_object
+
+    sender_address = client.local_account.address
+    data = [
+        calldata.encode(make_calldata_object(method=function_name, args=args, kwargs=None)),
+        b"\x00",
+    ]
+    request_params = {
+        "type": "read",
+        "to": address,
+        "from": sender_address,
+        "data": serialize(data),
+        "transaction_hash_variant": "latest-nonfinal",
+    }
+    raw = client.provider.make_request(method="gen_call", params=[request_params])
+    result = raw["result"]
+    enc_result = result["data"] if isinstance(result, dict) else result
+    prefixed_result = "0x" + enc_result
+    return calldata.decode(eth_utils.hexadecimal.decode_hex(prefixed_result))
+
+
 def get_contract_address() -> str:
     addr = os.environ.get("CONTRACT_ADDRESS", "").strip()
     if not addr:

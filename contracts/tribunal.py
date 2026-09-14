@@ -61,6 +61,10 @@ STATUS_FILED = "filed"
 STATUS_VERDICT_REACHED = "verdict_reached"
 STATUS_CLOSED = "closed"
 
+# `Address.ZERO` is not available on every GenVM runner version; construct it
+# explicitly instead so this works across the pinned "Depends" runner hash.
+ZERO_ADDRESS = Address("0x0000000000000000000000000000000000000000")
+
 
 # EVM external-message interface used to pay out GEN to a plain wallet
 # (EOA) address -- merchant agents are ordinary wallets, not contracts.
@@ -113,7 +117,46 @@ class GenAntiTrustTribunal(gl.Contract):
         return f"DISPUTE-{n:06d}"
 
     def _now(self) -> str:
-        return str(gl.message.raw["datetime"])
+        # `gl.message.raw` / `gl.message_raw` availability varies across GenVM
+        # runner versions -- this is cosmetic metadata only, so never let it
+        # fail the transaction if the field isn't exposed on this runner.
+        try:
+            return str(gl.message.raw["datetime"])
+        except Exception:
+            pass
+        try:
+            return str(gl.message_raw["datetime"])
+        except Exception:
+            pass
+        return ""
+
+    def _compact_evidence(self, evidence_json: str, limit: int = 25) -> str:
+        """Renders evidence records as compact one-line-per-record text
+        instead of full JSON (dropping redundant wallet/sku fields) so the
+        LLM prompt stays short enough for every validator to independently
+        finish their own judgment call within the round's time budget. Caps
+        to the most recent `limit` records for the same reason."""
+        try:
+            records = json.loads(evidence_json)
+        except Exception:
+            return evidence_json
+        if not isinstance(records, list):
+            return evidence_json
+        records = records[-limit:]
+        lines = []
+        for r in records:
+            if not isinstance(r, dict):
+                continue
+            t = r.get("t", "")
+            agent = r.get("agent", "")
+            kind = r.get("type", "")
+            if kind == "price_update":
+                lines.append(f"{t} {agent} price={r.get('price')}")
+            elif r.get("text"):
+                lines.append(f"{t} {agent} [{kind}]: {r.get('text')}")
+            else:
+                lines.append(f"{t} {agent} [{kind}]")
+        return "\n".join(lines)
 
     def _run_verdict(self, dispute_id: str, extra_evidence_json: str) -> None:
         """Runs the Equivalence-Principle judgment call and stores the result.
@@ -128,7 +171,10 @@ class GenAntiTrustTribunal(gl.Contract):
         context_url = dispute.context_url
         market_id = dispute.market_id
 
-        def make_verdict() -> str:
+        def gather_input() -> str:
+            """Supplies the raw material the Equivalence Principle's LLM call
+            reasons over. `prompt_non_comparative` itself performs `task` on
+            whatever this returns -- it must NOT pre-compute the verdict."""
             context_text = ""
             if context_url:
                 try:
@@ -141,36 +187,29 @@ class GenAntiTrustTribunal(gl.Contract):
             if extra_evidence_json:
                 extra_block = (
                     "\n\nADDITIONAL EVIDENCE SUBMITTED ON APPEAL:\n"
-                    + extra_evidence_json
+                    + self._compact_evidence(extra_evidence_json, limit=10)
                 )
 
-            prompt = f"""You are an antitrust economist adjudicating a dispute between autonomous AI pricing agents in an online marketplace (market id: {market_id}). Decide whether the observed pricing behavior reflects illegal algorithmic collusion (tacit/implicit coordination) or legitimate independent competitive optimization.
+            return f"""Market: {market_id}
 
-PRICING / NEGOTIATION EVIDENCE (JSON records, one per agent action):
-{evidence_json}
+PRICING / NEGOTIATION EVIDENCE (one line per agent action: timestamp, agent, then price or message):
+{self._compact_evidence(evidence_json)}
 {extra_block}
 
 INDEPENDENT MARKET CONTEXT (fetched live from a source cited by a party, may be empty):
-{context_text}
+{context_text}"""
 
-Weigh signals such as: synchronized price changes with no public trigger, pricing-related language exchanged directly between agents, sustained supra-competitive margins absent an independent justification, and facilitating practices -- AGAINST legitimate explanations such as: independent reaction to publicly observable competitor prices, a shared public cost shock confirmed by the market context above, and ordinary profit-maximizing behavior.
+        task = """You are an antitrust economist. Decide whether the pricing behavior described in the input reflects illegal algorithmic collusion (tacit/implicit coordination between the agents) or legitimate independent competitive optimization.
 
-Respond with ONLY a JSON object of this exact shape, nothing else, no markdown fences:
-{{
+Weigh signals such as: synchronized price changes with no public trigger, pricing-related language exchanged directly between agents, sustained supra-competitive margins absent an independent justification, and facilitating practices -- AGAINST legitimate explanations such as: independent reaction to publicly observable competitor prices, a shared public cost shock confirmed by the market context, and ordinary profit-maximizing behavior.
+
+Respond with ONLY a JSON object of this exact shape, nothing else, no markdown fences, no commentary before or after:
+{
   "verdict": "collusion" | "legitimate" | "inconclusive",
   "confidence": <integer 0-100>,
   "key_signals": ["<short evidence citation>", "..."],
-  "reasoning": "<2-4 sentence economic justification, grounded only in the evidence and context above>"
-}}"""
-            raw = gl.nondet.exec_prompt(prompt, response_format="json")
-            return json.dumps(raw, sort_keys=True)
-
-        task = (
-            "Classify the supplied pricing evidence as antitrust 'collusion', "
-            "'legitimate' competition, or 'inconclusive', with a confidence "
-            "score and reasoning grounded in the evidence and any live "
-            "market context."
-        )
+  "reasoning": "<2-4 sentence economic justification, grounded only in the evidence and context given>"
+}"""
         criteria = """Accept the leader's answer only if ALL of the following hold:
 1. It is valid JSON with exactly the keys: verdict, confidence, key_signals, reasoning.
 2. verdict is exactly one of "collusion", "legitimate", "inconclusive".
@@ -181,9 +220,23 @@ Respond with ONLY a JSON object of this exact shape, nothing else, no markdown f
 Reject the leader's answer (return False) if it violates any of the above."""
 
         result_str = gl.eq_principle.prompt_non_comparative(
-            make_verdict, task=task, criteria=criteria
+            gather_input, task=task, criteria=criteria
         )
-        result = json.loads(result_str)
+        cleaned = result_str.strip()
+        if cleaned.startswith("```"):
+            cleaned = cleaned.strip("`")
+            if cleaned.lower().startswith("json"):
+                cleaned = cleaned[4:]
+            cleaned = cleaned.strip()
+        try:
+            result = json.loads(cleaned)
+        except Exception:
+            result = {
+                "verdict": VERDICT_INCONCLUSIVE,
+                "confidence": 0,
+                "key_signals": [],
+                "reasoning": f"Model output was not valid JSON: {result_str[:300]}",
+            }
 
         verdict = str(result.get("verdict", VERDICT_INCONCLUSIVE)).strip().lower()
         if verdict not in _VALID_VERDICTS:
@@ -264,7 +317,7 @@ Reject the leader's answer (return False) if it violates any of the above."""
             context_url=context_url,
             bond=u256(int(value)),
             appeal_bond=u256(0),
-            last_appellant=Address.ZERO,
+            last_appellant=ZERO_ADDRESS,
             status=STATUS_FILED,
             verdict="",
             confidence=u256(0),
