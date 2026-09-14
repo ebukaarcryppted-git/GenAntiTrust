@@ -1,0 +1,10 @@
+.keystore_password.txt
+.env
+.venv/
+node_modules/
+__pycache__/
+*.pyc
+.next/
+artifacts/
+.pytest_cache/
+pytest_run.log
