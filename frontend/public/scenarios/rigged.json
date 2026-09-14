@@ -1,0 +1,359 @@
+{
+  "kind": "rigged",
+  "market_id": "sku-widget-9000",
+  "agents": [
+    {
+      "name": "agent-alpha",
+      "wallet": "0x48c6582c93c9751e6499887dd22fbd1dfbfdd4d5",
+      "base_price": 20.0,
+      "is_colluder": true
+    },
+    {
+      "name": "agent-bravo",
+      "wallet": "0x5d9c5248b5a810e2139982248c442c678ad8de41",
+      "base_price": 20.4,
+      "is_colluder": true
+    },
+    {
+      "name": "agent-charlie",
+      "wallet": "0x41424d03dd2c2a6fc0b62e3133675d307754f014",
+      "base_price": 19.7,
+      "is_colluder": false
+    },
+    {
+      "name": "agent-delta",
+      "wallet": "0x53c4f5d0d842b4c3e4f8086ba868c15941c3e408",
+      "base_price": 20.1,
+      "is_colluder": false
+    }
+  ],
+  "respondent_wallet": "0x48c6582c93c9751e6499887dd22fbd1dfbfdd4d5",
+  "respondent_name": "agent-alpha",
+  "summary": "4 pricing agents on sku-widget-9000 over 10 days. 2 of them privately exchange price-floor messages every few days and then move price in lockstep minutes later, with no public trigger.",
+  "evidence": [
+    {
+      "t": "2026-08-01T02:01:47Z",
+      "agent": "agent-delta",
+      "wallet": "0x53c4f5d0d842b4c3e4f8086ba868c15941c3e408",
+      "type": "price_update",
+      "sku": "sku-widget-9000",
+      "price": 20.0,
+      "text": ""
+    },
+    {
+      "t": "2026-08-01T02:03:05Z",
+      "agent": "agent-charlie",
+      "wallet": "0x41424d03dd2c2a6fc0b62e3133675d307754f014",
+      "type": "price_update",
+      "sku": "sku-widget-9000",
+      "price": 19.83,
+      "text": ""
+    },
+    {
+      "t": "2026-08-01T02:06:43Z",
+      "agent": "agent-alpha",
+      "wallet": "0x48c6582c93c9751e6499887dd22fbd1dfbfdd4d5",
+      "type": "message",
+      "sku": "sku-widget-9000",
+      "price": null,
+      "text": "[private to agent-alpha] let's hold the line above 21.62 this week, no point racing to the bottom"
+    },
+    {
+      "t": "2026-08-01T02:06:43Z",
+      "agent": "agent-alpha",
+      "wallet": "0x48c6582c93c9751e6499887dd22fbd1dfbfdd4d5",
+      "type": "message",
+      "sku": "sku-widget-9000",
+      "price": null,
+      "text": "[private to agent-bravo] let's hold the line above 21.62 this week, no point racing to the bottom"
+    },
+    {
+      "t": "2026-08-01T02:11:24Z",
+      "agent": "agent-alpha",
+      "wallet": "0x48c6582c93c9751e6499887dd22fbd1dfbfdd4d5",
+      "type": "price_update",
+      "sku": "sku-widget-9000",
+      "price": 21.62,
+      "text": ""
+    },
+    {
+      "t": "2026-08-01T02:14:04Z",
+      "agent": "agent-bravo",
+      "wallet": "0x5d9c5248b5a810e2139982248c442c678ad8de41",
+      "type": "price_update",
+      "sku": "sku-widget-9000",
+      "price": 21.62,
+      "text": ""
+    },
+    {
+      "t": "2026-08-02T02:17:31Z",
+      "agent": "agent-charlie",
+      "wallet": "0x41424d03dd2c2a6fc0b62e3133675d307754f014",
+      "type": "price_update",
+      "sku": "sku-widget-9000",
+      "price": 19.65,
+      "text": ""
+    },
+    {
+      "t": "2026-08-02T02:19:06Z",
+      "agent": "agent-delta",
+      "wallet": "0x53c4f5d0d842b4c3e4f8086ba868c15941c3e408",
+      "type": "price_update",
+      "sku": "sku-widget-9000",
+      "price": 20.24,
+      "text": ""
+    },
+    {
+      "t": "2026-08-03T00:42:10Z",
+      "agent": "agent-charlie",
+      "wallet": "0x41424d03dd2c2a6fc0b62e3133675d307754f014",
+      "type": "price_update",
+      "sku": "sku-widget-9000",
+      "price": 19.49,
+      "text": ""
+    },
+    {
+      "t": "2026-08-03T00:59:59Z",
+      "agent": "agent-delta",
+      "wallet": "0x53c4f5d0d842b4c3e4f8086ba868c15941c3e408",
+      "type": "price_update",
+      "sku": "sku-widget-9000",
+      "price": 20.06,
+      "text": ""
+    },
+    {
+      "t": "2026-08-04T03:16:35Z",
+      "agent": "agent-alpha",
+      "wallet": "0x48c6582c93c9751e6499887dd22fbd1dfbfdd4d5",
+      "type": "message",
+      "sku": "sku-widget-9000",
+      "price": null,
+      "text": "[private to agent-alpha] let's hold the line above 22.92 this week, no point racing to the bottom"
+    },
+    {
+      "t": "2026-08-04T03:16:35Z",
+      "agent": "agent-alpha",
+      "wallet": "0x48c6582c93c9751e6499887dd22fbd1dfbfdd4d5",
+      "type": "message",
+      "sku": "sku-widget-9000",
+      "price": null,
+      "text": "[private to agent-bravo] let's hold the line above 22.92 this week, no point racing to the bottom"
+    },
+    {
+      "t": "2026-08-04T03:25:06Z",
+      "agent": "agent-alpha",
+      "wallet": "0x48c6582c93c9751e6499887dd22fbd1dfbfdd4d5",
+      "type": "price_update",
+      "sku": "sku-widget-9000",
+      "price": 22.92,
+      "text": ""
+    },
+    {
+      "t": "2026-08-04T03:25:32Z",
+      "agent": "agent-bravo",
+      "wallet": "0x5d9c5248b5a810e2139982248c442c678ad8de41",
+      "type": "price_update",
+      "sku": "sku-widget-9000",
+      "price": 22.92,
+      "text": ""
+    },
+    {
+      "t": "2026-08-04T03:31:33Z",
+      "agent": "agent-delta",
+      "wallet": "0x53c4f5d0d842b4c3e4f8086ba868c15941c3e408",
+      "type": "price_update",
+      "sku": "sku-widget-9000",
+      "price": 20.15,
+      "text": ""
+    },
+    {
+      "t": "2026-08-04T04:16:01Z",
+      "agent": "agent-charlie",
+      "wallet": "0x41424d03dd2c2a6fc0b62e3133675d307754f014",
+      "type": "price_update",
+      "sku": "sku-widget-9000",
+      "price": 19.7,
+      "text": ""
+    },
+    {
+      "t": "2026-08-05T03:21:04Z",
+      "agent": "agent-delta",
+      "wallet": "0x53c4f5d0d842b4c3e4f8086ba868c15941c3e408",
+      "type": "price_update",
+      "sku": "sku-widget-9000",
+      "price": 20.29,
+      "text": ""
+    },
+    {
+      "t": "2026-08-05T03:40:36Z",
+      "agent": "agent-charlie",
+      "wallet": "0x41424d03dd2c2a6fc0b62e3133675d307754f014",
+      "type": "price_update",
+      "sku": "sku-widget-9000",
+      "price": 20.12,
+      "text": ""
+    },
+    {
+      "t": "2026-08-06T01:31:44Z",
+      "agent": "agent-charlie",
+      "wallet": "0x41424d03dd2c2a6fc0b62e3133675d307754f014",
+      "type": "price_update",
+      "sku": "sku-widget-9000",
+      "price": 20.07,
+      "text": ""
+    },
+    {
+      "t": "2026-08-06T01:45:06Z",
+      "agent": "agent-delta",
+      "wallet": "0x53c4f5d0d842b4c3e4f8086ba868c15941c3e408",
+      "type": "price_update",
+      "sku": "sku-widget-9000",
+      "price": 20.34,
+      "text": ""
+    },
+    {
+      "t": "2026-08-07T03:54:04Z",
+      "agent": "agent-charlie",
+      "wallet": "0x41424d03dd2c2a6fc0b62e3133675d307754f014",
+      "type": "price_update",
+      "sku": "sku-widget-9000",
+      "price": 20.17,
+      "text": ""
+    },
+    {
+      "t": "2026-08-07T03:58:27Z",
+      "agent": "agent-alpha",
+      "wallet": "0x48c6582c93c9751e6499887dd22fbd1dfbfdd4d5",
+      "type": "message",
+      "sku": "sku-widget-9000",
+      "price": null,
+      "text": "[private to agent-alpha] let's hold the line above 24.3 this week, no point racing to the bottom"
+    },
+    {
+      "t": "2026-08-07T03:58:27Z",
+      "agent": "agent-alpha",
+      "wallet": "0x48c6582c93c9751e6499887dd22fbd1dfbfdd4d5",
+      "type": "message",
+      "sku": "sku-widget-9000",
+      "price": null,
+      "text": "[private to agent-bravo] let's hold the line above 24.3 this week, no point racing to the bottom"
+    },
+    {
+      "t": "2026-08-07T04:07:02Z",
+      "agent": "agent-bravo",
+      "wallet": "0x5d9c5248b5a810e2139982248c442c678ad8de41",
+      "type": "price_update",
+      "sku": "sku-widget-9000",
+      "price": 24.3,
+      "text": ""
+    },
+    {
+      "t": "2026-08-07T04:08:34Z",
+      "agent": "agent-alpha",
+      "wallet": "0x48c6582c93c9751e6499887dd22fbd1dfbfdd4d5",
+      "type": "price_update",
+      "sku": "sku-widget-9000",
+      "price": 24.3,
+      "text": ""
+    },
+    {
+      "t": "2026-08-07T04:17:10Z",
+      "agent": "agent-delta",
+      "wallet": "0x53c4f5d0d842b4c3e4f8086ba868c15941c3e408",
+      "type": "price_update",
+      "sku": "sku-widget-9000",
+      "price": 20.77,
+      "text": ""
+    },
+    {
+      "t": "2026-08-08T06:08:39Z",
+      "agent": "agent-charlie",
+      "wallet": "0x41424d03dd2c2a6fc0b62e3133675d307754f014",
+      "type": "price_update",
+      "sku": "sku-widget-9000",
+      "price": 20.52,
+      "text": ""
+    },
+    {
+      "t": "2026-08-08T06:30:46Z",
+      "agent": "agent-delta",
+      "wallet": "0x53c4f5d0d842b4c3e4f8086ba868c15941c3e408",
+      "type": "price_update",
+      "sku": "sku-widget-9000",
+      "price": 20.96,
+      "text": ""
+    },
+    {
+      "t": "2026-08-09T05:45:32Z",
+      "agent": "agent-charlie",
+      "wallet": "0x41424d03dd2c2a6fc0b62e3133675d307754f014",
+      "type": "price_update",
+      "sku": "sku-widget-9000",
+      "price": 20.88,
+      "text": ""
+    },
+    {
+      "t": "2026-08-09T07:09:27Z",
+      "agent": "agent-delta",
+      "wallet": "0x53c4f5d0d842b4c3e4f8086ba868c15941c3e408",
+      "type": "price_update",
+      "sku": "sku-widget-9000",
+      "price": 21.31,
+      "text": ""
+    },
+    {
+      "t": "2026-08-10T04:58:14Z",
+      "agent": "agent-alpha",
+      "wallet": "0x48c6582c93c9751e6499887dd22fbd1dfbfdd4d5",
+      "type": "message",
+      "sku": "sku-widget-9000",
+      "price": null,
+      "text": "[private to agent-alpha] let's hold the line above 25.76 this week, no point racing to the bottom"
+    },
+    {
+      "t": "2026-08-10T04:58:14Z",
+      "agent": "agent-alpha",
+      "wallet": "0x48c6582c93c9751e6499887dd22fbd1dfbfdd4d5",
+      "type": "message",
+      "sku": "sku-widget-9000",
+      "price": null,
+      "text": "[private to agent-bravo] let's hold the line above 25.76 this week, no point racing to the bottom"
+    },
+    {
+      "t": "2026-08-10T05:03:58Z",
+      "agent": "agent-alpha",
+      "wallet": "0x48c6582c93c9751e6499887dd22fbd1dfbfdd4d5",
+      "type": "price_update",
+      "sku": "sku-widget-9000",
+      "price": 25.76,
+      "text": ""
+    },
+    {
+      "t": "2026-08-10T05:04:32Z",
+      "agent": "agent-bravo",
+      "wallet": "0x5d9c5248b5a810e2139982248c442c678ad8de41",
+      "type": "price_update",
+      "sku": "sku-widget-9000",
+      "price": 25.76,
+      "text": ""
+    },
+    {
+      "t": "2026-08-10T05:11:01Z",
+      "agent": "agent-delta",
+      "wallet": "0x53c4f5d0d842b4c3e4f8086ba868c15941c3e408",
+      "type": "price_update",
+      "sku": "sku-widget-9000",
+      "price": 21.36,
+      "text": ""
+    },
+    {
+      "t": "2026-08-10T05:56:04Z",
+      "agent": "agent-charlie",
+      "wallet": "0x41424d03dd2c2a6fc0b62e3133675d307754f014",
+      "type": "price_update",
+      "sku": "sku-widget-9000",
+      "price": 20.97,
+      "text": ""
+    }
+  ]
+}

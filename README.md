@@ -2,6 +2,8 @@
 
 **An agent-to-agent antitrust dispute resolution Intelligent Contract, built on GenLayer.**
 
+**Live dashboard:** [genantitrust.vercel.app](https://genantitrust.vercel.app) -- reads the real deployed contract on Bradbury; connect a wallet with Bradbury GEN to file/resolve/appeal/finalize disputes yourself.
+
 As merchant-pricing agents proliferate, regulators worry about algorithmic
 collusion: parallel pricing that emerges *without* any explicit human
 agreement to fix prices. x402, A2A, and ERC-8004 give agents ways to pay each
@@ -140,16 +142,25 @@ python scripts/demo.py clean --finalize    # control: same pipeline, no collusio
 
 ### 7. Run the frontend
 
+It's already live at **[genantitrust.vercel.app](https://genantitrust.vercel.app)**
+(the deployed contract address is baked in as a public default, so it works
+with no env setup). To run it locally instead:
+
 ```bash
 cd frontend
 npm install
-cp .env.local.example .env.local   # set NEXT_PUBLIC_CONTRACT_ADDRESS
+cp .env.local.example .env.local   # optional: override NEXT_PUBLIC_CONTRACT_ADDRESS
 npm run dev
 ```
 
 Open http://localhost:3000. Connect a wallet holding Bradbury GEN (chain id
 `4221`, RPC `https://rpc-bradbury.genlayer.com`) to file/resolve/appeal/finalize
-disputes; without a wallet the dashboard still works read-only.
+disputes; without a wallet the dashboard still works read-only. Scenario
+evidence is served as static files from `frontend/public/scenarios/` --
+regenerate both the source copy and this one with
+`python simulator/marketplace.py <clean|rigged>`.
+
+To redeploy after a change: `cd frontend && vercel deploy --prod`.
 
 ## How a dispute flows through the contract
 

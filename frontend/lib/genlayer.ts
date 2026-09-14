@@ -11,11 +11,14 @@ const CHAINS: Record<string, GenLayerChain> = {
   localnet: localnet,
 };
 
+// Public, non-secret defaults for the deployed GenAntiTrust Tribunal contract
+// on Testnet Bradbury. Env vars override these when set, so a platform-level
+// config still works, but the app runs correctly out of the box without one.
 export const NETWORK =
   process.env.NEXT_PUBLIC_GENLAYER_NETWORK || "testnet-bradbury";
 
 export const CONTRACT_ADDRESS = (process.env.NEXT_PUBLIC_CONTRACT_ADDRESS ||
-  "") as `0x${string}`;
+  "0x70096Df3A29293C5FEA914333074467E56725b3d") as `0x${string}`;
 
 export function getChain(): GenLayerChain {
   const chain = CHAINS[NETWORK];

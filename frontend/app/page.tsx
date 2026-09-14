@@ -28,7 +28,7 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch(`/api/scenarios/${scenarioKind}`)
+    fetch(`/scenarios/${scenarioKind}.json`)
       .then((r) => r.json())
       .then(setScenario)
       .catch(() => setScenario(null));

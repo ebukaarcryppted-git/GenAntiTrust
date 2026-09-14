@@ -238,13 +238,19 @@ def main() -> None:
     args = parser.parse_args()
 
     scenario = build_scenario(args.kind, days=args.days, seed=args.seed)
-    out_path = args.out or f"simulator/scenarios/{args.kind}.json"
     import os
 
-    os.makedirs(os.path.dirname(out_path), exist_ok=True)
-    with open(out_path, "w") as f:
-        json.dump(scenario, f, indent=2)
-    print(f"Wrote {len(scenario['evidence'])} evidence records to {out_path}")
+    out_paths = [args.out] if args.out else [
+        f"simulator/scenarios/{args.kind}.json",
+        # The frontend reads its scenarios as static public files (works
+        # unmodified on a serverless deploy) -- keep this copy in sync.
+        f"frontend/public/scenarios/{args.kind}.json",
+    ]
+    for out_path in out_paths:
+        os.makedirs(os.path.dirname(out_path), exist_ok=True)
+        with open(out_path, "w") as f:
+            json.dump(scenario, f, indent=2)
+        print(f"Wrote {len(scenario['evidence'])} evidence records to {out_path}")
     print(scenario["summary"])
 
 
