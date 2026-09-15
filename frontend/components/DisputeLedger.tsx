@@ -1,6 +1,7 @@
 "use client";
 
-import { CONTRACT_ADDRESS, EXPLORER_URL, formatGen } from "@/lib/genlayer";
+import { formatGen } from "@/lib/genlayer";
+import type { NetworkAdapter } from "@/lib/network";
 import { Dispute } from "@/lib/types";
 
 const VERDICT_CHIP: Record<string, string> = {
@@ -10,10 +11,12 @@ const VERDICT_CHIP: Record<string, string> = {
 };
 
 export function DisputeLedger({
+  network,
   disputes,
   treasury,
   onSelect,
 }: {
+  network: NetworkAdapter;
   disputes: Dispute[];
   treasury: number;
   onSelect: (d: Dispute) => void;
@@ -28,7 +31,7 @@ export function DisputeLedger({
                 Dispute ledger
               </div>
               <div className="text-[12.5px] text-ink-muted">
-                Read live from the contract, every 8 seconds
+                Read live from {network.shortLabel}, polled every 15 seconds
               </div>
             </div>
             <span className="rounded-lg bg-milk px-3 py-1.5 font-mono text-[12px] text-ink-muted">
@@ -101,12 +104,12 @@ export function DisputeLedger({
 
           <div className="border-t border-hairline px-5 py-3.5">
             <a
-              href={`${EXPLORER_URL}address/${CONTRACT_ADDRESS}`}
+              href={`${network.explorerUrl}address/${network.contractAddress}`}
               target="_blank"
               rel="noreferrer"
               className="font-mono text-[12px] text-ink-muted underline-offset-4 hover:text-ink hover:underline"
             >
-              {CONTRACT_ADDRESS} ↗
+              {network.contractAddress} ↗
             </a>
           </div>
         </div>

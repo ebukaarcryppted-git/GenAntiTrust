@@ -1,0 +1,13 @@
+{
+  "name": "genantitrust",
+  "private": true,
+  "type": "module",
+  "workspaces": ["frontend"],
+  "scripts": {
+    "deploy:studio": "node scripts/deploy_studio.mjs",
+    "demo:studio": "node scripts/demo_studio.mjs"
+  },
+  "devDependencies": {
+    "genlayer-js": "2.0.0-rc.1"
+  }
+}

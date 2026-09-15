@@ -3,6 +3,7 @@
 import { EvidenceTimeline } from "@/components/EvidenceTimeline";
 import { VerdictCard } from "@/components/VerdictCard";
 import { formatGenCompact } from "@/lib/genlayer";
+import type { NetworkAdapter } from "@/lib/network";
 import { Dispute, Scenario } from "@/lib/types";
 
 export type ScenarioKind = "clean" | "rigged";
@@ -20,6 +21,7 @@ type Step = {
 };
 
 export function Console({
+  network,
   scenario,
   scenarioKind,
   setScenarioKind,
@@ -28,12 +30,16 @@ export function Console({
   minBond,
   busy,
   error,
+  notice,
   address,
   onFile,
   onResolve,
   onAppeal,
   onFinalize,
+  onWithdraw,
+  claimable,
 }: {
+  network: NetworkAdapter;
   scenario: Scenario | null;
   scenarioKind: ScenarioKind;
   setScenarioKind: (k: ScenarioKind) => void;
@@ -42,11 +48,14 @@ export function Console({
   minBond: bigint;
   busy: string | null;
   error: string | null;
+  notice?: string | null;
   address: string | null;
   onFile: () => void;
   onResolve: () => void;
   onAppeal: () => void;
   onFinalize: () => void;
+  onWithdraw: () => void;
+  claimable: bigint;
 }) {
   const steps: Step[] = [
     {
@@ -86,14 +95,33 @@ export function Console({
     },
     {
       n: 4,
-      title: "Finalize and release escrow",
-      body: "Pays the bond out deterministically, based on the verdict string.",
+      title: network.hasWithdraw ? "Finalize and settle" : "Finalize and release escrow",
+      body: network.hasWithdraw
+        ? "Credits the bond to the winning party's ledger, deterministically."
+        : "Pays the bond directly to the winning party, deterministically.",
       cta: "Finalize",
       busyLabel: "Finalizing…",
       busyKey: "finalizing",
       onClick: onFinalize,
       disabled: !disputeId || !!busy || dispute?.status !== "verdict_reached",
     },
+    ...(network.hasWithdraw
+      ? [
+          {
+            n: 5,
+            title: "Withdraw your award",
+            body:
+              claimable > 0n
+                ? `${formatGenCompact(claimable)} is owed to your wallet.`
+                : "Settled awards are pulled by their owner, not pushed.",
+            cta: "Withdraw",
+            busyLabel: "Withdrawing…",
+            busyKey: "withdrawing",
+            onClick: onWithdraw,
+            disabled: !!busy || claimable <= 0n,
+          },
+        ]
+      : []),
   ];
 
   return (
@@ -105,7 +133,7 @@ export function Console({
           </h2>
           <p className="mt-5 text-[16px] leading-relaxed text-ink-muted">
             Pick a marketplace, read the evidence, and put it to the validators.
-            Every action here is a real transaction on Testnet Bradbury.
+            Every action here is a real transaction on {network.label}.
           </p>
         </div>
 
@@ -170,8 +198,10 @@ export function Console({
 
               {!address && (
                 <div className="mt-4 rounded-xl border border-sky bg-sky-tint px-3.5 py-2.5 text-[12.5px] leading-relaxed text-ink">
-                  Connect a wallet holding Bradbury GEN to run these steps. The
-                  dashboard stays fully readable without one.
+                  Connect a wallet on {network.label} (chain{" "}
+                  {parseInt(network.chainIdHex, 16)}) to run these steps — it
+                  will be added for you. The dashboard stays fully readable
+                  without one.
                 </div>
               )}
 
@@ -223,6 +253,11 @@ export function Console({
               {error && (
                 <p className="mt-4 rounded-xl bg-darkmilk-tint px-3.5 py-2.5 text-[12.5px] leading-relaxed text-darkmilk-deep">
                   {error}
+                </p>
+              )}
+              {notice && !error && (
+                <p className="mt-4 rounded-xl border border-sky bg-sky-tint px-3.5 py-2.5 text-[12.5px] leading-relaxed text-ink">
+                  {notice}
                 </p>
               )}
             </div>

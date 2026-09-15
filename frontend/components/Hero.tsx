@@ -111,7 +111,7 @@ export function Hero() {
                 Collusion
               </span>
               <span className="font-mono text-[12.5px] text-ink-muted">
-                99% confidence
+                98% confidence
               </span>
             </div>
             <p className="mt-3.5 text-[14px] leading-relaxed text-ink">
@@ -121,7 +121,7 @@ export function Hero() {
               optimization.”
             </p>
             <div className="mt-4 flex items-center justify-between border-t border-hairline pt-3.5 font-mono text-[11.5px] text-ink-faint">
-              <span>DISPUTE-000002</span>
+              <span>DISPUTE-000000</span>
               <span>5 validators · eq_principle</span>
             </div>
           </div>

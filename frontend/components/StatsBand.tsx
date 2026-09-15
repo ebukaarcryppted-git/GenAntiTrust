@@ -1,6 +1,7 @@
 "use client";
 
 import { formatGenCompact } from "@/lib/genlayer";
+import type { NetworkAdapter } from "@/lib/network";
 
 function Stat({
   value,
@@ -27,9 +28,11 @@ function Stat({
 export function StatsBand({
   disputeCount,
   minBond,
+  network,
 }: {
   disputeCount: number;
   minBond: bigint;
+  network: NetworkAdapter;
 }) {
   return (
     <section className="px-4 pt-20 sm:px-6 sm:pt-28">
@@ -41,7 +44,7 @@ export function StatsBand({
           <Stat
             value={String(disputeCount)}
             label="Verdicts on-chain"
-            detail="Every one decided by a real Equivalence Principle round on Bradbury."
+            detail={`Every one decided by a real Equivalence Principle round on ${network.shortLabel}.`}
           />
           <Stat
             value="5"

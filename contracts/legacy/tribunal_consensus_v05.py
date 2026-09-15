@@ -1,53 +1,55 @@
-# { "Depends": "py-genlayer:5jycge4q8k23462jtb0b9fyey1s9qz928sz2nbrd9mg4sxqg2qng" }
+# { "Depends": "py-genlayer:1jb45aa8ynh2a9c9xn3b7qqh8sm5q93hwfp7jqmwsfhh8jpz09h6" }
 """
-GenAntiTrust Tribunal — Consensus v0.6 (Studio Next).
+GenAntiTrust Tribunal
+======================
 
-An Equivalence-Principle Intelligent Contract that adjudicates agent-to-agent
-antitrust disputes: given a market's pricing / negotiation history between
-autonomous merchant-pricing agents, it renders a subjective verdict --
-"collusion", "legitimate" or "inconclusive" -- and releases an escrowed bond
-according to that verdict.
+An Equivalence-Principle Intelligent Contract for GenLayer that adjudicates
+agent-to-agent antitrust disputes: given a market's pricing / negotiation
+history between autonomous merchant-pricing agents, it renders a subjective
+verdict -- "collusion", "legitimate", or "inconclusive" -- and releases an
+escrowed bond according to that verdict.
 
 Why this is an Intelligent Contract and not a dApp with an LLM bolted on:
   * The core question ("is this parallel pricing implicit collusion, or
-    legitimate independent optimization?") has no deterministic answer. It is
-    a subjective judgment call a majority of validators must independently
-    agree on -- exactly what the Equivalence Principle exists for.
+    legitimate independent optimization?") has no deterministic answer -- it
+    is a genuinely subjective judgment call that a majority of validators
+    must independently reach consensus on. That is exactly what the
+    Equivalence Principle exists for.
   * `gl.eq_principle.prompt_non_comparative` is the non-deterministic,
-    load-bearing call. The leader performs the task over the evidence and
-    every other validator independently re-judges that answer against the
-    `criteria` below. Remove the call and the contract cannot decide anything:
-    there is no deterministic fallback path that produces a verdict.
-  * Money moves only as a *consequence* of the verdict. All bookkeeping is
-    plain deterministic Python reading a verdict string.
+    load-bearing call: the leader runs an LLM over the evidence, and every
+    validator independently re-grounds and re-judges that answer against the
+    same evidence (and any live web context) using the criteria below. If a
+    majority disagrees with the leader, the round is rejected and a new
+    leader is chosen (Optimistic Democracy) -- this contract has no fallback
+    deterministic path that produces a verdict without that call.
+  * Money moves only as a *consequence* of the verdict (deterministic
+    bookkeeping is kept entirely separate from the non-deterministic
+    judgment call, per GenLayer's recommended pattern).
 
 Bond / escrow lifecycle:
-  1. `file_complaint`   -- complainant posts a GEN bond (anti-spam stake) plus
+  1. `file_complaint`  -- complainant posts a GEN bond (anti-spam stake) and
      the raw evidence. Funds are now held by the contract.
   2. `resolve_dispute`  -- runs the Equivalence-Principle verdict. No funds
      move yet; the dispute becomes appealable.
   3. `appeal_verdict`   -- either party may, up to MAX_APPEALS times, post a
-     fresh appeal bond (>= the original) with new evidence to force a
-     re-judgment. That bond settles immediately: refunded if the verdict
-     flips, forfeited to the other party if it is confirmed.
-  4. `finalize_dispute` -- once nobody appeals further, anyone can finalize:
-     "legitimate" pays the bond to the respondent (compensation for a
-     complaint that did not hold up); "collusion" or "inconclusive" refunds
-     the complainant.
-
-Ported to the Consensus v0.6 SDK: namespaced `genlayer` imports,
-`gl.contract.Contract`, `gl.storage.*` collections, and `gl.chain.Account`
-for value transfers out to plain wallets.
+     fresh appeal bond (>= the original bond) together with new evidence to
+     force a re-judgment. The appeal bond is settled immediately: if the
+     verdict flips, the appellant is refunded in full; if it is confirmed,
+     the appellant's bond is forfeited to the other party. This is deliberately
+     modeled on GenLayer's own appeal-bond economics (an appeal is a bet that
+     the network got it wrong).
+  4. `finalize_dispute` -- once no further appeal is filed, anyone can
+     finalize: a "legitimate" verdict pays the original bond to the
+     respondent (compensation for a complaint that didn't hold up);
+     "collusion" or "inconclusive" refunds the complainant.
 """
 
 import json
 from dataclasses import dataclass
-
-import genlayer as gl
-from genlayer.storage import allow as allow_storage
+from genlayer import *
 
 
-MIN_BOND = gl.u256(1 * 10**18)  # 1 GEN anti-spam bond to file a complaint
+MIN_BOND = u256(1 * 10**18)  # 1 GEN minimum anti-spam bond to file a complaint
 MAX_APPEALS = 2
 
 VERDICT_COLLUSION = "collusion"
@@ -59,39 +61,51 @@ STATUS_FILED = "filed"
 STATUS_VERDICT_REACHED = "verdict_reached"
 STATUS_CLOSED = "closed"
 
-ZERO_ADDRESS = gl.Address("0x0000000000000000000000000000000000000000")
+# `Address.ZERO` is not available on every GenVM runner version; construct it
+# explicitly instead so this works across the pinned "Depends" runner hash.
+ZERO_ADDRESS = Address("0x0000000000000000000000000000000000000000")
+
+
+# EVM external-message interface used to pay out GEN to a plain wallet
+# (EOA) address -- merchant agents are ordinary wallets, not contracts.
+@gl.evm.contract_interface
+class _Eoa:
+    class View:
+        pass
+
+    class Write:
+        pass
 
 
 @allow_storage
 @dataclass
 class Dispute:
     id: str
-    complainant: gl.Address
-    respondent: gl.Address
+    complainant: Address
+    respondent: Address
     market_id: str
     evidence_json: str
     context_url: str
-    bond: gl.u256
-    appeal_bond: gl.u256
-    last_appellant: gl.Address
+    bond: u256
+    appeal_bond: u256
+    last_appellant: Address
     status: str
     verdict: str
-    confidence: gl.u256
+    confidence: u256
     key_signals_json: str
     reasoning: str
-    appeal_count: gl.u256
+    appeal_count: u256
     filed_at: str
     resolved_at: str
 
 
-class GenAntiTrustTribunal(gl.contract.Contract):
-    dispute_ids: gl.storage.DynArray[str]
-    disputes: gl.storage.TreeMap[str, Dispute]
-    claimable: gl.storage.TreeMap[gl.Address, gl.u256]
-    next_id: gl.u256
+class GenAntiTrustTribunal(gl.Contract):
+    dispute_ids: DynArray[str]
+    disputes: TreeMap[str, Dispute]
+    next_id: u256
 
     def __init__(self):
-        self.next_id = gl.u256(0)
+        self.next_id = u256(0)
 
     # ------------------------------------------------------------------
     # Deterministic helpers
@@ -99,36 +113,29 @@ class GenAntiTrustTribunal(gl.contract.Contract):
 
     def _new_dispute_id(self) -> str:
         n = int(self.next_id)
-        self.next_id = gl.u256(n + 1)
+        self.next_id = u256(n + 1)
         return f"DISPUTE-{n:06d}"
 
     def _now(self) -> str:
+        # `gl.message.raw` / `gl.message_raw` availability varies across GenVM
+        # runner versions -- this is cosmetic metadata only, so never let it
+        # fail the transaction if the field isn't exposed on this runner.
         try:
             return str(gl.message.raw["datetime"])
         except Exception:
-            return ""
-
-    def _credit(self, recipient: gl.Address, amount: gl.u256) -> None:
-        """Settle an award to the internal ledger (pull payments).
-
-        Consensus v0.6 requires every fee-bearing emitted message to be
-        declared up front in the submitting transaction's allocation tree.
-        An appeal's payee is only known *after* the LLM round decides whether
-        the verdict flipped, so the caller cannot pre-declare it. Crediting a
-        ledger here keeps settlement purely deterministic, and `withdraw()`
-        emits the single message — where the recipient is always the caller,
-        so the allocation is trivially predictable.
-        """
-        if int(amount) <= 0:
-            return
-        current = int(self.claimable.get(recipient, gl.u256(0)))
-        self.claimable[recipient] = gl.u256(current + int(amount))
+            pass
+        try:
+            return str(gl.message_raw["datetime"])
+        except Exception:
+            pass
+        return ""
 
     def _compact_evidence(self, evidence_json: str, limit: int = 25) -> str:
-        """Render evidence as one compact line per record instead of raw JSON
-        (dropping redundant wallet/sku fields), so the prompt stays short
-        enough for every validator to finish its own judgment inside the
-        round's time budget. Caps to the most recent `limit` records."""
+        """Renders evidence records as compact one-line-per-record text
+        instead of full JSON (dropping redundant wallet/sku fields) so the
+        LLM prompt stays short enough for every validator to independently
+        finish their own judgment call within the round's time budget. Caps
+        to the most recent `limit` records for the same reason."""
         try:
             records = json.loads(evidence_json)
         except Exception:
@@ -152,11 +159,12 @@ class GenAntiTrustTribunal(gl.contract.Contract):
         return "\n".join(lines)
 
     def _run_verdict(self, dispute_id: str, extra_evidence_json: str) -> None:
-        """Run the Equivalence-Principle judgment and store the result.
+        """Runs the Equivalence-Principle judgment call and stores the result.
 
         This is the ONLY place the contract touches non-deterministic
-        execution. Everything that decides where money goes reads the plain
-        deterministic `verdict` string left behind here.
+        execution (an LLM call, plus an optional live web fetch). Everything
+        that decides where money goes (resolve/appeal/finalize) reads the
+        plain deterministic `verdict` string this leaves behind.
         """
         dispute = self.disputes[dispute_id]
         evidence_json = dispute.evidence_json
@@ -164,9 +172,9 @@ class GenAntiTrustTribunal(gl.contract.Contract):
         market_id = dispute.market_id
 
         def gather_input() -> str:
-            """Supplies the raw material the principle's LLM call reasons
-            over. `prompt_non_comparative` performs `task` on whatever this
-            returns -- it must NOT pre-compute the verdict itself."""
+            """Supplies the raw material the Equivalence Principle's LLM call
+            reasons over. `prompt_non_comparative` itself performs `task` on
+            whatever this returns -- it must NOT pre-compute the verdict."""
             context_text = ""
             if context_url:
                 try:
@@ -214,7 +222,6 @@ Reject the leader's answer (return False) if it violates any of the above."""
         result_str = gl.eq_principle.prompt_non_comparative(
             gather_input, task=task, criteria=criteria
         )
-
         cleaned = result_str.strip()
         if cleaned.startswith("```"):
             cleaned = cleaned.strip("`")
@@ -244,7 +251,7 @@ Reject the leader's answer (return False) if it violates any of the above."""
 
         dispute = self.disputes[dispute_id]
         dispute.verdict = verdict
-        dispute.confidence = gl.u256(confidence)
+        dispute.confidence = u256(confidence)
         dispute.key_signals_json = json.dumps(key_signals)
         dispute.reasoning = str(result.get("reasoning", ""))
         dispute.status = STATUS_VERDICT_REACHED
@@ -296,7 +303,7 @@ Reject the leader's answer (return False) if it violates any of the above."""
             raise gl.vm.UserError("evidence_json must be valid JSON")
 
         sender = gl.message.sender_address
-        respondent_addr = gl.Address(respondent)
+        respondent_addr = Address(respondent)
         if respondent_addr == sender:
             raise gl.vm.UserError("cannot file a complaint against yourself")
 
@@ -308,15 +315,15 @@ Reject the leader's answer (return False) if it violates any of the above."""
             market_id=market_id,
             evidence_json=evidence_json,
             context_url=context_url,
-            bond=gl.u256(int(value)),
-            appeal_bond=gl.u256(0),
+            bond=u256(int(value)),
+            appeal_bond=u256(0),
             last_appellant=ZERO_ADDRESS,
             status=STATUS_FILED,
             verdict="",
-            confidence=gl.u256(0),
+            confidence=u256(0),
             key_signals_json="[]",
             reasoning="",
-            appeal_count=gl.u256(0),
+            appeal_count=u256(0),
             filed_at=self._now(),
             resolved_at="",
         )
@@ -360,29 +367,29 @@ Reject the leader's answer (return False) if it violates any of the above."""
             )
 
         previous_verdict = dispute.verdict
-        dispute.appeal_bond = gl.u256(int(value))
+        dispute.appeal_bond = u256(int(value))
         dispute.last_appellant = sender
 
         self._run_verdict(dispute_id, extra_evidence_json=additional_evidence_json)
 
         dispute = self.disputes[dispute_id]
-        dispute.appeal_count = gl.u256(int(dispute.appeal_count) + 1)
+        dispute.appeal_count = u256(int(dispute.appeal_count) + 1)
 
         appeal_bond = dispute.appeal_bond
         if dispute.verdict != previous_verdict:
-            # The appeal moved the outcome: the appellant was right to
-            # challenge it, so their bond comes back in full.
-            self._credit(sender, appeal_bond)
+            # The appeal changed the outcome: the appellant was right to
+            # challenge it. Refund their appeal bond in full.
+            _Eoa(sender).emit_transfer(value=appeal_bond)
         else:
             # The appeal failed to move the verdict: forfeit the bond to the
-            # other party as compensation for a frivolous challenge.
+            # other party as compensation for a frivolous appeal.
             other = (
                 dispute.respondent
                 if sender == dispute.complainant
                 else dispute.complainant
             )
-            self._credit(other, appeal_bond)
-        dispute.appeal_bond = gl.u256(0)
+            _Eoa(other).emit_transfer(value=appeal_bond)
+        dispute.appeal_bond = u256(0)
 
         return dispute.verdict
 
@@ -396,42 +403,21 @@ Reject the leader's answer (return False) if it violates any of the above."""
 
         bond = dispute.bond
         if dispute.verdict == VERDICT_LEGITIMATE:
-            # The complaint did not hold up: the bond compensates the accused.
-            self._credit(dispute.respondent, bond)
+            # The complaint didn't hold up: the bond compensates the accused.
+            _Eoa(dispute.respondent).emit_transfer(value=bond)
         else:
             # "collusion" confirmed, or "inconclusive": benefit of the doubt
             # goes to whoever raised the complaint.
-            self._credit(dispute.complainant, bond)
+            _Eoa(dispute.complainant).emit_transfer(value=bond)
 
-        dispute.bond = gl.u256(0)
+        dispute.bond = u256(0)
         dispute.status = STATUS_CLOSED
         dispute.resolved_at = self._now()
         return dispute.status
 
-    @gl.public.write
-    def withdraw(self) -> int:
-        """Pay out everything owed to the caller.
-
-        The only method that emits a value message. The recipient is always
-        `gl.message.sender_address`, so the caller can declare the matching
-        fee allocation before submitting.
-        """
-        sender = gl.message.sender_address
-        amount = int(self.claimable.get(sender, gl.u256(0)))
-        if amount <= 0:
-            raise gl.vm.UserError("nothing to withdraw")
-
-        self.claimable[sender] = gl.u256(0)
-        gl.chain.Account(sender).emit_transfer(gl.u256(amount))
-        return amount
-
     # ------------------------------------------------------------------
     # Public views
     # ------------------------------------------------------------------
-
-    @gl.public.view
-    def get_claimable(self, address: str) -> int:
-        return int(self.claimable.get(gl.Address(address), gl.u256(0)))
 
     @gl.public.view
     def get_dispute(self, dispute_id: str) -> dict:
@@ -445,10 +431,7 @@ Reject the leader's answer (return False) if it violates any of the above."""
 
     @gl.public.view
     def get_all_disputes(self) -> dict:
-        return {
-            d_id: self._dispute_to_dict(self.disputes[d_id])
-            for d_id in self.dispute_ids
-        }
+        return {d_id: self._dispute_to_dict(self.disputes[d_id]) for d_id in self.dispute_ids}
 
     @gl.public.view
     def get_treasury_balance(self) -> int:

@@ -1,7 +1,7 @@
 import { BrandMark } from "@/components/Brand";
-import { CONTRACT_ADDRESS, EXPLORER_URL, NETWORK } from "@/lib/genlayer";
+import type { NetworkAdapter } from "@/lib/network";
 
-export function Footer() {
+export function Footer({ network }: { network: NetworkAdapter }) {
   return (
     <footer className="px-4 pb-10 pt-24 sm:px-6 sm:pt-32">
       <div className="mx-auto max-w-6xl overflow-hidden rounded-[28px] bg-ink px-6 py-12 sm:px-10">
@@ -29,7 +29,7 @@ export function Footer() {
               Repository
             </a>
             <a
-              href={`${EXPLORER_URL}address/${CONTRACT_ADDRESS}`}
+              href={`${network.explorerUrl}address/${network.contractAddress}`}
               target="_blank"
               rel="noreferrer"
               className="text-paper/60 transition-colors hover:text-sky"
@@ -45,19 +45,23 @@ export function Footer() {
               Equivalence Principle
             </a>
             <a
-              href="https://testnet-faucet.genlayer.foundation/"
+              href={
+                network.id === "studio"
+                  ? "https://studio-next.genlayer.com/"
+                  : "https://testnet-faucet.genlayer.foundation/"
+              }
               target="_blank"
               rel="noreferrer"
               className="text-paper/60 transition-colors hover:text-sky"
             >
-              Bradbury faucet
+              {network.id === "studio" ? "Studio Next" : "Bradbury faucet"}
             </a>
           </div>
         </div>
 
         <div className="mt-12 flex flex-col gap-2 border-t border-paper/10 pt-6 font-mono text-[11.5px] text-paper/40 sm:flex-row sm:items-center sm:justify-between">
-          <span>{CONTRACT_ADDRESS}</span>
-          <span>{NETWORK} · chain 4221</span>
+          <span>{network.contractAddress}</span>
+          <span>{network.label} · chain {parseInt(network.chainIdHex, 16)}</span>
         </div>
       </div>
     </footer>
