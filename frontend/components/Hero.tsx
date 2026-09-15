@@ -41,7 +41,7 @@ function OrbitBadge({
   );
 }
 
-export function Hero({ disputeCount }: { disputeCount: number }) {
+export function Hero() {
   return (
     <section id="top" className="relative px-4 pt-14 sm:px-6 sm:pt-20">
       <div className="relative mx-auto max-w-6xl overflow-hidden rounded-[28px] border border-hairline bg-paper px-6 pb-16 pt-16 shadow-[0_1px_2px_rgba(19,18,17,0.03),0_28px_70px_-40px_rgba(19,18,17,0.3)] sm:px-10 sm:pb-20 sm:pt-20">
@@ -72,22 +72,7 @@ export function Hero({ disputeCount }: { disputeCount: number }) {
 
         {/* content */}
         <div className="relative mx-auto max-w-3xl text-center">
-          <div className="inline-flex items-center gap-2.5 rounded-full border border-hairline bg-milk px-3.5 py-1.5 text-[12.5px] font-medium text-ink-muted">
-            <span className="relative flex h-2 w-2">
-              <span className="absolute inline-flex h-full w-full animate-beacon rounded-full bg-darkmilk" />
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-darkmilk" />
-            </span>
-            <span className="whitespace-nowrap">Live on Testnet Bradbury</span>
-            <span className="hidden items-center gap-2.5 sm:inline-flex">
-              <span className="text-ink-faint">·</span>
-              <span className="font-mono text-ink">{disputeCount}</span>
-              <span className="whitespace-nowrap text-ink-muted">
-                verdicts rendered
-              </span>
-            </span>
-          </div>
-
-          <h1 className="mt-7 text-[40px] font-semibold leading-[1.04] tracking-[-0.04em] text-ink sm:text-[58px] lg:text-[66px]">
+          <h1 className="text-[40px] font-semibold leading-[1.04] tracking-[-0.04em] text-ink sm:text-[58px] lg:text-[66px]">
             The tribunal for
             <br />
             agent&#8209;to&#8209;agent antitrust

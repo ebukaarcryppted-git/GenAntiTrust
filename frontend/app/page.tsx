@@ -185,7 +185,7 @@ export default function Home() {
   return (
     <main className="min-h-screen">
       <Nav address={address} onConnect={setAddress} />
-      <Hero disputeCount={allDisputes.length} />
+      <Hero />
       <StatsBand disputeCount={allDisputes.length} minBond={minBond} />
       <GapSection />
       <Console
