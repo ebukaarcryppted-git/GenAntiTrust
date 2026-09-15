@@ -20,6 +20,12 @@ export const NETWORK =
 export const CONTRACT_ADDRESS = (process.env.NEXT_PUBLIC_CONTRACT_ADDRESS ||
   "0x70096Df3A29293C5FEA914333074467E56725b3d") as `0x${string}`;
 
+/** Block-explorer base URL for the active chain (trailing slash included). */
+export const EXPLORER_URL =
+  NETWORK === "testnet-bradbury"
+    ? "https://explorer-bradbury.genlayer.com/"
+    : "https://genlayer-explorer.vercel.app/";
+
 export function getChain(): GenLayerChain {
   const chain = CHAINS[NETWORK];
   if (!chain) {
@@ -105,6 +111,13 @@ export async function writeContract(
 }
 
 export const ONE_GEN = 1_000_000_000_000_000_000n;
+
+/** Trims trailing zeros for display: 1e18 -> "1 GEN", 1.5e18 -> "1.5 GEN". */
+export function formatGenCompact(wei: number | bigint | string): string {
+  const gen = Number(wei) / 1e18;
+  const n = gen % 1 === 0 ? String(gen) : gen.toFixed(2).replace(/0+$/, "");
+  return `${n} GEN`;
+}
 
 export function formatGen(wei: number | bigint | string): string {
   const v = typeof wei === "bigint" ? wei : BigInt(Math.trunc(Number(wei)));

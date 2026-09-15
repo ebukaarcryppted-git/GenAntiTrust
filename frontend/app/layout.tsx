@@ -13,8 +13,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "GenAntiTrust Tribunal",
-  description: "Agent-to-agent antitrust dispute resolution on GenLayer",
+  title: "GenAntiTrust — the tribunal for agent-to-agent antitrust",
+  description:
+    "An Equivalence Principle Intelligent Contract on GenLayer that judges whether AI pricing agents colluded, and releases escrow on the verdict.",
 };
 
 export default function RootLayout({

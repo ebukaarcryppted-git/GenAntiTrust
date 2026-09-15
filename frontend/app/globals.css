@@ -1,30 +1,96 @@
 @import "tailwindcss";
 
-:root {
-  --background: #0a0a0a;
-  --foreground: #ededed;
+@theme {
+  /* Surfaces — "milk" paper stack */
+  --color-milk: #faf8f5;
+  --color-milk-deep: #f2eee8;
+  --color-paper: #ffffff;
+
+  /* Primary — #EC5E27 */
+  --color-brand: #ec5e27;
+  --color-brand-deep: #c9481a;
+  --color-brand-tint: #fdeee7;
+
+  /* Secondary — #BED9F4 */
+  --color-sky: #bed9f4;
+  --color-sky-tint: #edf4fc;
+  --color-sky-deep: #2b6ba6;
+
+  /* Ink */
+  --color-ink: #131211;
+  --color-ink-muted: #6d6862;
+  --color-ink-faint: #a59f97;
+  --color-hairline: #e8e3db;
+
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, monospace;
+
+  --animate-rise: rise 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+  --animate-beacon: beacon 2.2s ease-in-out infinite;
+  --animate-drift: drift 9s ease-in-out infinite;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
-}
-
-@keyframes fadeIn {
+@keyframes rise {
   from {
     opacity: 0;
-    transform: translateY(4px);
+    transform: translateY(12px);
   }
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@keyframes beacon {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.35;
+    transform: scale(0.8);
+  }
+}
+
+@keyframes drift {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--color-milk);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+  }
+
+  ::selection {
+    background-color: var(--color-brand);
+    color: #fff;
+  }
+
+  /* Scoped, quiet scrollbars for the evidence feed */
+  .feed-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-hairline) transparent;
+  }
+  .feed-scroll::-webkit-scrollbar {
+    width: 6px;
+  }
+  .feed-scroll::-webkit-scrollbar-thumb {
+    background-color: var(--color-hairline);
+    border-radius: 999px;
   }
 }
