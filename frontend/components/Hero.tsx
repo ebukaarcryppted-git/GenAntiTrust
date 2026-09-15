@@ -25,10 +25,11 @@ function OrbitBadge({
       style={{ left, top, animation: `drift 9s ease-in-out ${delay}s infinite` }}
     >
       <span
-        className={`flex h-14 w-14 items-center justify-center rounded-full bg-paper text-[19px] font-semibold shadow-[0_2px_4px_rgba(19,18,17,0.04),0_14px_30px_-12px_rgba(19,18,17,0.25)] ring-1 ${
+        className={`flex h-14 w-14 items-center justify-center rounded-full text-[19px] font-semibold shadow-[0_2px_4px_rgba(19,18,17,0.04),0_14px_30px_-12px_rgba(19,18,17,0.25)] ring-1 ${
           flagged
-            ? "text-brand ring-brand/25"
-            : "text-sky-deep ring-sky/60"
+            ? // the accused pair: inverted, so weight carries what hue used to
+              "bg-darkmilk text-milk ring-darkmilk"
+            : "bg-paper text-ink ring-sky"
         }`}
       >
         {initial}
@@ -73,8 +74,8 @@ export function Hero({ disputeCount }: { disputeCount: number }) {
         <div className="relative mx-auto max-w-3xl text-center">
           <div className="inline-flex items-center gap-2.5 rounded-full border border-hairline bg-milk px-3.5 py-1.5 text-[12.5px] font-medium text-ink-muted">
             <span className="relative flex h-2 w-2">
-              <span className="absolute inline-flex h-full w-full animate-beacon rounded-full bg-brand" />
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-brand" />
+              <span className="absolute inline-flex h-full w-full animate-beacon rounded-full bg-darkmilk" />
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-darkmilk" />
             </span>
             <span className="whitespace-nowrap">Live on Testnet Bradbury</span>
             <span className="hidden items-center gap-2.5 sm:inline-flex">
@@ -101,7 +102,7 @@ export function Hero({ disputeCount }: { disputeCount: number }) {
           <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
             <a
               href="#console"
-              className="rounded-xl bg-brand px-5 py-3 text-[14.5px] font-semibold text-paper shadow-[0_10px_24px_-10px_rgba(236,94,39,0.75)] transition-colors hover:bg-brand-deep"
+              className="rounded-xl bg-darkmilk px-5 py-3 text-[14.5px] font-semibold text-paper shadow-[0_10px_24px_-10px_rgba(51,41,31,0.32)] transition-colors hover:bg-darkmilk-deep"
             >
               Open the tribunal
             </a>
@@ -120,8 +121,8 @@ export function Hero({ disputeCount }: { disputeCount: number }) {
           <div className="absolute inset-x-4 -bottom-2 h-24 rounded-2xl border border-hairline bg-paper/80" />
           <div className="relative animate-rise rounded-2xl border border-hairline bg-paper p-5 text-left shadow-[0_2px_4px_rgba(19,18,17,0.03),0_24px_50px_-28px_rgba(19,18,17,0.4)]">
             <div className="flex items-center justify-between gap-3">
-              <span className="inline-flex items-center gap-2 rounded-lg bg-brand-tint px-2.5 py-1 text-[12px] font-semibold uppercase tracking-wide text-brand">
-                <span className="h-1.5 w-1.5 rounded-full bg-brand" />
+              <span className="inline-flex items-center gap-2 rounded-lg bg-darkmilk px-2.5 py-1 text-[12px] font-semibold uppercase tracking-wide text-milk">
+                <span className="h-1.5 w-1.5 rounded-full bg-milk" />
                 Collusion
               </span>
               <span className="font-mono text-[12.5px] text-ink-muted">

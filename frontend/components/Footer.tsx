@@ -24,7 +24,7 @@ export function Footer() {
               href="https://github.com/ebukaarcryppted-git/GenAntiTrust"
               target="_blank"
               rel="noreferrer"
-              className="text-paper/60 transition-colors hover:text-brand"
+              className="text-paper/60 transition-colors hover:text-sky"
             >
               Repository
             </a>
@@ -32,7 +32,7 @@ export function Footer() {
               href={`${EXPLORER_URL}address/${CONTRACT_ADDRESS}`}
               target="_blank"
               rel="noreferrer"
-              className="text-paper/60 transition-colors hover:text-brand"
+              className="text-paper/60 transition-colors hover:text-sky"
             >
               Explorer
             </a>
@@ -40,7 +40,7 @@ export function Footer() {
               href="https://docs.genlayer.com/developers/intelligent-contracts/equivalence-principle"
               target="_blank"
               rel="noreferrer"
-              className="text-paper/60 transition-colors hover:text-brand"
+              className="text-paper/60 transition-colors hover:text-sky"
             >
               Equivalence Principle
             </a>
@@ -48,7 +48,7 @@ export function Footer() {
               href="https://testnet-faucet.genlayer.foundation/"
               target="_blank"
               rel="noreferrer"
-              className="text-paper/60 transition-colors hover:text-brand"
+              className="text-paper/60 transition-colors hover:text-sky"
             >
               Bradbury faucet
             </a>

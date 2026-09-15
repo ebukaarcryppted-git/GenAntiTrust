@@ -1,26 +1,26 @@
 @import "tailwindcss";
 
 @theme {
-  /* Surfaces — "milk" paper stack */
+  /* ── Milk ─────────────────────────────────────────────── */
   --color-milk: #faf8f5;
-  --color-milk-deep: #f2eee8;
+  --color-milk-deep: #f0eae0;
   --color-paper: #ffffff;
 
-  /* Primary — #EC5E27 */
-  --color-brand: #ec5e27;
-  --color-brand-deep: #c9481a;
-  --color-brand-tint: #fdeee7;
+  /* ── Dark milk — the primary. Carries every emphasis that
+        colour used to carry, through weight and inversion. ─ */
+  --color-darkmilk: #33291f;
+  --color-darkmilk-deep: #211a13;
+  --color-darkmilk-tint: #ebe3d7;
 
-  /* Secondary — #BED9F4 */
+  /* ── Light blue — the only accent hue ─────────────────── */
   --color-sky: #bed9f4;
-  --color-sky-tint: #edf4fc;
-  --color-sky-deep: #2b6ba6;
+  --color-sky-tint: #eef4fb;
 
-  /* Ink */
-  --color-ink: #131211;
-  --color-ink-muted: #6d6862;
-  --color-ink-faint: #a59f97;
-  --color-hairline: #e8e3db;
+  /* Text scale, all drawn from the dark-milk family */
+  --color-ink: #33291f;
+  --color-ink-muted: #6f6355;
+  --color-ink-faint: #8f8170;
+  --color-hairline: #e7dfd2;
 
   --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, monospace;
@@ -77,8 +77,8 @@
   }
 
   ::selection {
-    background-color: var(--color-brand);
-    color: #fff;
+    background-color: var(--color-darkmilk);
+    color: var(--color-milk);
   }
 
   /* Scoped, quiet scrollbars for the evidence feed */

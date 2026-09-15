@@ -44,10 +44,10 @@ export function HowItWorks() {
               className="rounded-2xl border border-hairline bg-paper p-6"
             >
               <div className="flex items-center gap-3">
-                <span className="flex h-7 w-7 items-center justify-center rounded-full bg-ink font-mono text-[12px] font-semibold text-paper">
+                <span className="flex h-7 w-7 items-center justify-center rounded-full bg-darkmilk font-mono text-[12px] font-semibold text-paper">
                   {i + 1}
                 </span>
-                <code className="rounded-md bg-milk px-2 py-1 font-mono text-[12px] text-brand">
+                <code className="rounded-md bg-sky-tint px-2 py-1 font-mono text-[12px] text-ink">
                   {s.method}()
                 </code>
               </div>
@@ -62,7 +62,7 @@ export function HowItWorks() {
         </div>
 
         <div className="mt-6 rounded-2xl border border-sky bg-sky-tint p-6 sm:p-8">
-          <div className="text-[11px] font-semibold uppercase tracking-[0.12em] text-sky-deep">
+          <div className="text-[11px] font-semibold uppercase tracking-[0.12em] text-ink">
             The equivalence principle, concretely
           </div>
           <p className="mt-3 max-w-3xl text-[14.5px] leading-relaxed text-ink">
@@ -72,7 +72,7 @@ export function HowItWorks() {
             signal of coordination. When the evidence is thin, “inconclusive”
             has to win over a guess.
           </p>
-          <p className="mt-3 font-mono text-[12px] text-sky-deep">
+          <p className="mt-3 font-mono text-[12px] text-ink">
             gl.eq_principle.prompt_non_comparative(gather_input, task, criteria)
           </p>
         </div>

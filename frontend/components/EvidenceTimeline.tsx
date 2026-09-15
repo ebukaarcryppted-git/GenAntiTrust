@@ -26,7 +26,7 @@ export function EvidenceTimeline({ evidence }: { evidence: EvidenceRecord[] }) {
                 key={i}
                 className={`flex items-start gap-3 px-4 py-3 sm:px-5 ${
                   isMessage
-                    ? "bg-brand-tint/60"
+                    ? "bg-darkmilk-tint"
                     : isRebuttal
                     ? "bg-sky-tint"
                     : ""
@@ -37,7 +37,7 @@ export function EvidenceTimeline({ evidence }: { evidence: EvidenceRecord[] }) {
                 </span>
                 <span
                   className={`w-[88px] shrink-0 truncate pt-0.5 text-[12.5px] font-semibold leading-5 ${
-                    isMessage ? "text-brand" : "text-ink"
+                    isMessage ? "text-ink" : "text-ink"
                   }`}
                 >
                   {r.agent}
@@ -52,10 +52,10 @@ export function EvidenceTimeline({ evidence }: { evidence: EvidenceRecord[] }) {
                     </span>
                   )}
                   {isMessage && (
-                    <span className="text-brand-deep">“{r.text}”</span>
+                    <span className="font-medium text-ink">“{r.text}”</span>
                   )}
                   {isRebuttal && (
-                    <span className="text-sky-deep">{r.text}</span>
+                    <span className="text-ink">{r.text}</span>
                   )}
                 </span>
               </li>

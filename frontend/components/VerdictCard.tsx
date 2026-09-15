@@ -9,19 +9,19 @@ const STYLES: Record<
 > = {
   collusion: {
     label: "Collusion",
-    chip: "bg-brand text-paper",
-    bar: "bg-brand",
-    ring: "border-brand/30",
+    chip: "bg-darkmilk text-paper",
+    bar: "bg-darkmilk",
+    ring: "border-darkmilk/30",
   },
   legitimate: {
     label: "Legitimate competition",
-    chip: "bg-sky-deep text-paper",
-    bar: "bg-sky-deep",
+    chip: "bg-sky text-ink",
+    bar: "bg-sky",
     ring: "border-sky",
   },
   inconclusive: {
     label: "Inconclusive",
-    chip: "bg-ink text-paper",
+    chip: "bg-milk-deep text-ink-muted",
     bar: "bg-ink-faint",
     ring: "border-hairline",
   },
@@ -32,7 +32,7 @@ export function VerdictCard({ dispute }: { dispute: Dispute }) {
     return (
       <div className="rounded-2xl border border-dashed border-hairline bg-milk p-6">
         <div className="flex items-center gap-2.5">
-          <span className="h-2 w-2 animate-beacon rounded-full bg-brand" />
+          <span className="h-2 w-2 animate-beacon rounded-full bg-darkmilk" />
           <span className="text-[14px] font-semibold text-ink">
             Validators are reasoning independently…
           </span>
@@ -87,7 +87,7 @@ export function VerdictCard({ dispute }: { dispute: Dispute }) {
                 key={i}
                 className="flex gap-2.5 rounded-lg bg-milk px-3 py-2 text-[13px] leading-relaxed text-ink-muted"
               >
-                <span className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-brand" />
+                <span className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-darkmilk" />
                 <span>{sig}</span>
               </li>
             ))}

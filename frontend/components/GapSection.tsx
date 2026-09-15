@@ -48,13 +48,13 @@ export function GapSection() {
               className={`rounded-2xl border p-5 transition-shadow ${
                 l.solved
                   ? "border-hairline bg-paper"
-                  : "border-brand/30 bg-brand-tint shadow-[0_18px_40px_-24px_rgba(236,94,39,0.55)]"
+                  : "border-darkmilk bg-darkmilk shadow-[0_18px_40px_-24px_rgba(51,41,31,0.45)]"
               }`}
             >
               <div className="flex items-center justify-between">
                 <span
                   className={`font-mono text-[13px] font-semibold ${
-                    l.solved ? "text-ink" : "text-brand"
+                    l.solved ? "text-ink" : "text-milk"
                   }`}
                 >
                   {l.name}
@@ -62,8 +62,8 @@ export function GapSection() {
                 <span
                   className={`flex h-6 w-6 items-center justify-center rounded-full text-[13px] font-semibold ${
                     l.solved
-                      ? "bg-sky-tint text-sky-deep"
-                      : "bg-brand text-paper"
+                      ? "bg-sky-tint text-ink"
+                      : "bg-milk text-darkmilk"
                   }`}
                   aria-hidden
                 >
@@ -72,14 +72,14 @@ export function GapSection() {
               </div>
               <div
                 className={`mt-4 text-[15px] font-semibold ${
-                  l.solved ? "text-ink" : "text-brand-deep"
+                  l.solved ? "text-ink" : "text-milk"
                 }`}
               >
                 {l.role}
               </div>
               <p
                 className={`mt-2 text-[13.5px] leading-relaxed ${
-                  l.solved ? "text-ink-muted" : "text-brand-deep/80"
+                  l.solved ? "text-ink-muted" : "text-milk/70"
                 }`}
               >
                 {l.body}

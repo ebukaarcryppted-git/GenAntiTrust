@@ -4,8 +4,8 @@ import { CONTRACT_ADDRESS, EXPLORER_URL, formatGen } from "@/lib/genlayer";
 import { Dispute } from "@/lib/types";
 
 const VERDICT_CHIP: Record<string, string> = {
-  collusion: "bg-brand-tint text-brand",
-  legitimate: "bg-sky-tint text-sky-deep",
+  collusion: "bg-darkmilk text-milk",
+  legitimate: "bg-sky-tint text-ink",
   inconclusive: "bg-milk-deep text-ink-muted",
 };
 
@@ -104,7 +104,7 @@ export function DisputeLedger({
               href={`${EXPLORER_URL}address/${CONTRACT_ADDRESS}`}
               target="_blank"
               rel="noreferrer"
-              className="font-mono text-[12px] text-ink-muted underline-offset-4 hover:text-brand hover:underline"
+              className="font-mono text-[12px] text-ink-muted underline-offset-4 hover:text-ink hover:underline"
             >
               {CONTRACT_ADDRESS} ↗
             </a>

@@ -58,7 +58,7 @@ export function Nav({
 
         <div className="flex items-center gap-2">
           {error && (
-            <span className="hidden max-w-[180px] truncate text-xs text-brand sm:block">
+            <span className="hidden max-w-[180px] truncate text-xs text-darkmilk sm:block">
               {error}
             </span>
           )}
@@ -71,15 +71,15 @@ export function Nav({
             Contract ↗
           </a>
           {address ? (
-            <span className="flex items-center gap-2 rounded-xl border border-sky bg-sky-tint px-3.5 py-2 font-mono text-[13px] text-sky-deep">
-              <span className="h-1.5 w-1.5 rounded-full bg-sky-deep" />
+            <span className="flex items-center gap-2 rounded-xl border border-sky bg-sky-tint px-3.5 py-2 font-mono text-[13px] text-ink">
+              <span className="h-1.5 w-1.5 rounded-full bg-ink" />
               {address.slice(0, 6)}…{address.slice(-4)}
             </span>
           ) : (
             <button
               onClick={connect}
               disabled={connecting}
-              className="rounded-xl bg-ink px-4 py-2.5 text-[13.5px] font-semibold text-paper transition-all hover:bg-brand disabled:opacity-50"
+              className="rounded-xl bg-darkmilk px-4 py-2.5 text-[13.5px] font-semibold text-paper transition-all hover:bg-darkmilk-deep disabled:opacity-50"
             >
               {connecting ? "Connecting…" : "Connect wallet"}
             </button>

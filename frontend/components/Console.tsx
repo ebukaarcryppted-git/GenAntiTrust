@@ -169,7 +169,7 @@ export function Console({
               </div>
 
               {!address && (
-                <div className="mt-4 rounded-xl border border-sky bg-sky-tint px-3.5 py-2.5 text-[12.5px] leading-relaxed text-sky-deep">
+                <div className="mt-4 rounded-xl border border-sky bg-sky-tint px-3.5 py-2.5 text-[12.5px] leading-relaxed text-ink">
                   Connect a wallet holding Bradbury GEN to run these steps. The
                   dashboard stays fully readable without one.
                 </div>
@@ -191,7 +191,7 @@ export function Console({
                         className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full font-mono text-[11.5px] font-semibold ${
                           s.disabled && !isBusy
                             ? "bg-milk-deep text-ink-faint"
-                            : "bg-brand-tint text-brand"
+                            : "bg-darkmilk-tint text-darkmilk"
                         }`}
                       >
                         {s.n}
@@ -209,7 +209,7 @@ export function Console({
                         disabled={s.disabled}
                         className={`w-full shrink-0 rounded-lg px-3 py-2 text-[12.5px] font-semibold transition-colors disabled:cursor-not-allowed sm:w-auto sm:self-center ${
                           s.primary
-                            ? "bg-brand text-paper hover:bg-brand-deep disabled:bg-milk-deep disabled:text-ink-faint"
+                            ? "bg-darkmilk text-paper hover:bg-darkmilk-deep disabled:bg-milk-deep disabled:text-ink-faint"
                             : "border border-hairline bg-paper text-ink hover:bg-milk-deep disabled:text-ink-faint"
                         }`}
                       >
@@ -221,7 +221,7 @@ export function Console({
               </ol>
 
               {error && (
-                <p className="mt-4 rounded-xl bg-brand-tint px-3.5 py-2.5 text-[12.5px] leading-relaxed text-brand-deep">
+                <p className="mt-4 rounded-xl bg-darkmilk-tint px-3.5 py-2.5 text-[12.5px] leading-relaxed text-darkmilk-deep">
                   {error}
                 </p>
               )}
