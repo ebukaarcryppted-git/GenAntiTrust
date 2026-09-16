@@ -26,7 +26,7 @@ export function BrandLockup() {
   return (
     <span className="flex items-center gap-2.5">
       <BrandMark className="h-8 w-8" />
-      <span className="text-[17px] font-semibold tracking-[-0.02em] text-ink">
+      <span className="hidden text-[17px] font-semibold tracking-[-0.02em] text-ink sm:inline">
         GenAntiTrust
       </span>
     </span>

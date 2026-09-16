@@ -39,7 +39,7 @@ export function Nav({
 
   return (
     <header className="sticky top-0 z-50 px-4 pt-4 sm:px-6">
-      <nav className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-3 rounded-2xl border border-hairline bg-paper/85 pl-5 pr-3 shadow-[0_1px_2px_rgba(19,18,17,0.04),0_12px_32px_-18px_rgba(19,18,17,0.22)] backdrop-blur-xl">
+      <nav className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-2 rounded-2xl border border-hairline bg-paper/85 pl-3 pr-2 shadow-[0_1px_2px_rgba(19,18,17,0.04),0_12px_32px_-18px_rgba(19,18,17,0.22)] backdrop-blur-xl sm:gap-3 sm:pl-5 sm:pr-3">
         <a href="#top" className="shrink-0">
           <BrandLockup />
         </a>
@@ -56,7 +56,7 @@ export function Nav({
           ))}
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex min-w-0 items-center gap-1 sm:gap-2">
           {error && (
             <span className="hidden max-w-[160px] truncate text-xs text-darkmilk sm:block">
               {error}
@@ -69,13 +69,16 @@ export function Nav({
                 key={id}
                 onClick={() => onSwitchNetwork(id)}
                 title={id === "studio" ? "GenLayer Studio Next (Consensus v0.6)" : "GenLayer Testnet Bradbury (Consensus v0.5)"}
-                className={`rounded-lg px-3 py-2 text-[12.5px] font-semibold transition-colors ${
+                className={`whitespace-nowrap rounded-lg px-2 py-1.5 text-[11px] font-semibold transition-colors sm:px-3 sm:py-2 sm:text-[12.5px] ${
                   network.id === id
                     ? "bg-paper text-ink shadow-[0_1px_2px_rgba(19,18,17,0.08)]"
                     : "text-ink-muted hover:text-ink"
                 }`}
               >
-                {id === "studio" ? "Studio Next" : "Bradbury"}
+                <span className="sm:hidden">{id === "studio" ? "Studio" : "Bradbury"}</span>
+                <span className="hidden sm:inline">
+                  {id === "studio" ? "Studio Next" : "Bradbury"}
+                </span>
               </button>
             ))}
           </div>
@@ -89,17 +92,20 @@ export function Nav({
             Contract ↗
           </a>
           {address ? (
-            <span className="flex items-center gap-2 rounded-xl border border-sky bg-sky-tint px-3.5 py-2 font-mono text-[13px] text-ink">
-              <span className="h-1.5 w-1.5 rounded-full bg-ink" />
+            <span className="flex items-center gap-1.5 rounded-xl border border-sky bg-sky-tint px-2.5 py-1.5 font-mono text-[12px] text-ink sm:gap-2 sm:px-3.5 sm:py-2 sm:text-[13px]">
+              <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-ink" />
               {address.slice(0, 6)}…{address.slice(-4)}
             </span>
           ) : (
             <button
               onClick={connect}
               disabled={connecting}
-              className="rounded-xl bg-darkmilk px-4 py-2.5 text-[13.5px] font-semibold text-paper transition-all hover:bg-darkmilk-deep disabled:opacity-50"
+              className="shrink-0 whitespace-nowrap rounded-xl bg-darkmilk px-3 py-2 text-[12px] font-semibold text-paper transition-all hover:bg-darkmilk-deep disabled:opacity-50 sm:px-4 sm:py-2.5 sm:text-[13.5px]"
             >
-              {connecting ? "Connecting…" : "Connect wallet"}
+              <span className="sm:hidden">{connecting ? "…" : "Connect"}</span>
+              <span className="hidden sm:inline">
+                {connecting ? "Connecting…" : "Connect wallet"}
+              </span>
             </button>
           )}
         </div>

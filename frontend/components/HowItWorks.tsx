@@ -72,7 +72,7 @@ export function HowItWorks() {
             signal of coordination. When the evidence is thin, “inconclusive”
             has to win over a guess.
           </p>
-          <p className="mt-3 font-mono text-[12px] text-ink">
+          <p className="mt-3 break-all font-mono text-[12px] text-ink">
             gl.eq_principle.prompt_non_comparative(gather_input, task, criteria)
           </p>
         </div>
