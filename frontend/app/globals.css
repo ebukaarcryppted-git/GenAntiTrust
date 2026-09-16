@@ -29,7 +29,11 @@
   /* one step below milk-deep, so borders still read against every tone */
   --color-hairline: #ded3c2;
 
-  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  /* Rubik carries body copy, Exo 2 carries headings, Poppins carries UI
+     chrome (nav, buttons, badges) -- three roles, not one swapped face. */
+  --font-sans: var(--font-rubik), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-exo2), var(--font-rubik), ui-sans-serif, sans-serif;
+  --font-ui: var(--font-poppins), var(--font-rubik), ui-sans-serif, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, monospace;
 
   --animate-rise: rise 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
@@ -81,6 +85,19 @@
     background-color: var(--color-milk);
     color: var(--color-ink);
     font-family: var(--font-sans);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+  }
+
+  button,
+  nav a,
+  nav button {
+    font-family: var(--font-ui);
   }
 
   ::selection {
