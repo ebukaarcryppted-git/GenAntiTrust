@@ -54,6 +54,7 @@ Principle, then escrows and releases a GEN bond according to that verdict.
 |---|---|---|---|---|
 | `DISPUTE-000000` | rigged (colluding) | 🚨 `collusion` | 98% | `verdict_reached` |
 | `DISPUTE-000001` | rigged (colluding) | 🚨 `collusion` | 90% | `closed` -- finalized, bond settled to the `claimable` ledger and withdrawn |
+| `DISPUTE-000002` | rigged (colluding) | 🚨 `collusion` confirmed on appeal | 95% | `closed` -- filed, resolved, appealed with a rebuttal, finalized, and withdrawn end-to-end from the live dashboard with a real connected wallet |
 
 **Real verdicts already rendered on Bradbury** (chain 4220, check any of these on the [explorer](https://explorer-bradbury.genlayer.com/)):
 
