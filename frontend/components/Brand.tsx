@@ -1,24 +1,17 @@
 /**
- * A level balance beam resting on a fulcrum — equilibrium, judged.
- * Authored as fills on a 64-unit grid so it stays legible from the 16px
- * favicon up to the nav lockup; app/icon.svg draws the identical shapes.
+ * The brand mark — a level balance beam resting on a fulcrum, equilibrium
+ * judged. Ships as a raster asset (public/brand-mark.png); app/icon.png,
+ * app/favicon.ico and app/apple-icon.png are generated from the same source.
  */
 export function BrandMark({ className = "" }: { className?: string }) {
   return (
-    <span
-      className={`inline-flex items-center justify-center rounded-[11px] bg-darkmilk text-milk ${className}`}
-    >
-      <svg
-        viewBox="0 0 64 64"
-        fill="currentColor"
-        className="h-[62%] w-[62%]"
-        aria-hidden="true"
-      >
-        <rect x="8" y="19" width="48" height="6" rx="3" />
-        <path d="M32 27 L42.5 45 H21.5 Z" />
-        <rect x="19" y="45" width="26" height="6" rx="3" />
-      </svg>
-    </span>
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src="/brand-mark.png"
+      alt=""
+      aria-hidden="true"
+      className={`inline-block object-contain ${className}`}
+    />
   );
 }
 
