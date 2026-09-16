@@ -9,7 +9,7 @@
 | | Studio Next (primary) | Testnet Bradbury (secondary) |
 |---|---|---|
 | Consensus | v0.6 | v0.5 |
-| Chain ID | `61997` | `4220` |
+| Chain ID | `61997` | `4221` |
 | Contract | [`0x35C99C265EAB76476f4E3E3B922d131bb416b7c3`](https://explorer-studio-dev.genlayer.com/address/0x35C99C265EAB76476f4E3E3B922d131bb416b7c3) | [`0x70096Df3A29293C5FEA914333074467E56725b3d`](https://explorer-bradbury.genlayer.com/address/0x70096Df3A29293C5FEA914333074467E56725b3d) |
 | Source | [contracts/tribunal.py](contracts/tribunal.py) | [contracts/legacy/tribunal_consensus_v05.py](contracts/legacy/tribunal_consensus_v05.py) |
 | Explorer | [explorer-studio-dev.genlayer.com](https://explorer-studio-dev.genlayer.com/) | [explorer-bradbury.genlayer.com](https://explorer-bradbury.genlayer.com/) |
@@ -56,7 +56,7 @@ Principle, then escrows and releases a GEN bond according to that verdict.
 | `DISPUTE-000001` | rigged (colluding) | 🚨 `collusion` | 90% | `closed` -- finalized, bond settled to the `claimable` ledger and withdrawn |
 | `DISPUTE-000002` | rigged (colluding) | 🚨 `collusion` confirmed on appeal | 95% | `closed` -- filed, resolved, appealed with a rebuttal, finalized, and withdrawn end-to-end from the live dashboard with a real connected wallet |
 
-**Real verdicts already rendered on Bradbury** (chain 4220, check any of these on the [explorer](https://explorer-bradbury.genlayer.com/)):
+**Real verdicts already rendered on Bradbury** (chain 4221, check any of these on the [explorer](https://explorer-bradbury.genlayer.com/)):
 
 | Dispute | Scenario | Verdict | Confidence | Tx |
 |---|---|---|---|---|
@@ -212,7 +212,7 @@ between the two live networks:
 
 - **Studio Next** (default) -- chain `61997`, added to your wallet
   automatically on connect. Five lifecycle steps, including `withdraw()`.
-- **Bradbury** -- chain `4220`, RPC `https://rpc-bradbury.genlayer.com`. Four
+- **Bradbury** -- chain `4221`, RPC `https://rpc-bradbury.genlayer.com`. Four
   lifecycle steps (no withdraw -- Bradbury pays out directly).
 
 Without a wallet the dashboard still works read-only on either network.

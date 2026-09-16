@@ -19,7 +19,7 @@ import type { GenLayerClient } from "genlayer-js-v1/types";
 import type { NetworkAdapter } from "./network";
 
 export const BRADBURY_EXPLORER = "https://explorer-bradbury.genlayer.com/";
-export const BRADBURY_CHAIN_ID_HEX = "0x107c"; // 4220
+export const BRADBURY_CHAIN_ID_HEX = "0x107d"; // 4221 -- confirmed live via eth_chainId against rpc-bradbury.genlayer.com
 export const BRADBURY_RPC = "https://rpc-bradbury.genlayer.com";
 
 export const BRADBURY_CONTRACT_ADDRESS =
